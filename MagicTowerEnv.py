@@ -81,7 +81,7 @@ class MagicTowerEnv(gym.Env):
       #    })
 
       self.observation_space = spaces.Box(low=-20, high=20,
-                                        shape=(2,width, height),dtype=np.int32)
+                                        shape=(width, height),dtype=np.int32)
 
           
           # "right", "up", "left", "down"
@@ -110,7 +110,7 @@ class MagicTowerEnv(gym.Env):
             agent_value = -agent_value
         obs_array[self.agent_pos[0],self.agent_pos[1]] = agent_value
         obs_array = obs_array.astype(np.int32)
-        obs_array = np.stack((self.curr_map, self.curr_visit_map ), axis=0,dtype=np.int32)
+       # obs_array = np.stack((self.curr_map, self.curr_visit_map ), axis=0,dtype=np.int32)
         return obs_array
 
 
@@ -202,22 +202,22 @@ class MagicTowerEnv(gym.Env):
                     reward -=100
               #enemy
               if(self.curr_map[next_x,next_y] == 2):
-                  win_rate = random.randint(0,100)
-                  if(win_rate >= 50):#win
-                     reward +=200
+                 # win_rate = random.randint(0,100)
+                  #if(win_rate >= 50):#win
+                     reward +=50*self.curr_HP
                      self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                      self.curr_map[next_x,next_y] = 1
                      self.agent_pos = [next_x,next_y]
-                  else:
+                  #else:
                      self.curr_HP -= 1
                      if(self.curr_HP <= 0):
-                         reward -=100
+                         reward -=1000
                          terminated = True
-                     else:
-                         reward -=50
-                         self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
-                         self.curr_map[next_x,next_y] = 1
-                         self.agent_pos = [next_x,next_y]
+                     #else:
+                      #   reward -=50
+                      #   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
+                      #   self.curr_map[next_x,next_y] = 1
+                      #   self.agent_pos = [next_x,next_y]
           
           observation = self._get_obs()
           info = self._get_info()

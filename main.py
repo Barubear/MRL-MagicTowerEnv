@@ -36,7 +36,7 @@ model = RecurrentPPO(
     verbose=1
 )
 
-print(train.train(model,vec_env,2000000))
+print(train.train(model,vec_env,3000000))
 model = RecurrentPPO.load("models/best_model" )
 #render_test.render_test(model,vec_env,100) 
 render_test.test(model,vec_env,200) 
