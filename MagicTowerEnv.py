@@ -56,6 +56,7 @@ class MagicTowerEnv(gym.Env):
             1: (5,5),
             2: (1,7),
           }
+      self.key_index = 0
       x,y = self.key_pos_seed[random.randint(0,2)]
       self.curr_map = self.origin_map.copy()
       self.curr_map[x,y] = 5
@@ -114,13 +115,14 @@ class MagicTowerEnv(gym.Env):
            self.curr_step = 0
            self.if_have_key =False
            self.curr_HP = self.max_HP
-           x,y = self.key_pos_seed[random.randint(0,2)]
+           x,y = self.key_pos_seed[self.key_index % 2]
+           self.key_index +=1
            self.curr_map = self.origin_map.copy()
            self.curr_map[x,y] = 5
            self.agent_pos = self.start_pos.copy()
            self.curr_coin_num = self.max_coin_num
            self.curr_nemy_num = self.max_enemy_num
-
+           
            return self._get_obs() , self._get_info()
       
      
