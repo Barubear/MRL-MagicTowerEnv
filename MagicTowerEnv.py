@@ -33,6 +33,17 @@ class MagicTowerEnv(gym.Env):
          [ 2, 0,-1, 0,-1,-1, 0],
          [ 0, 4,-1, 1, 0, 0, 0],
          ]))
+      
+      self.origin_visit_map = np.transpose(np.array([
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         ]))
 
       self.max_step =100000
       self.curr_step = 0
@@ -60,6 +71,7 @@ class MagicTowerEnv(gym.Env):
       x,y = self.key_pos_seed[self.key_index]
       self.curr_map = self.origin_map.copy()
       self.curr_map[x,y] = 5
+      self.curr_visit_map = self.origin_visit_map.copy()
 
 
       #self.observation_space = spaces.Dict({
@@ -69,7 +81,7 @@ class MagicTowerEnv(gym.Env):
       #    })
 
       self.observation_space = spaces.Box(low=-20, high=20,
-                                            shape=(width, height),dtype=np.int32)
+                                        shape=(2,width, height),dtype=np.int32)
 
           
           # "right", "up", "left", "down"
@@ -98,6 +110,7 @@ class MagicTowerEnv(gym.Env):
             agent_value = -agent_value
         obs_array[self.agent_pos[0],self.agent_pos[1]] = agent_value
         obs_array = obs_array.astype(np.int32)
+        obs_array = np.stack((self.curr_map, self.curr_visit_map ), axis=0,dtype=np.int32)
         return obs_array
 
 
@@ -122,7 +135,8 @@ class MagicTowerEnv(gym.Env):
            self.agent_pos = self.start_pos.copy()
            self.curr_coin_num = self.max_coin_num
            self.curr_nemy_num = self.max_enemy_num
-           
+           self.curr_visit_map = self.origin_visit_map.copy()
+
            return self._get_obs() , self._get_info()
       
      
@@ -152,13 +166,16 @@ class MagicTowerEnv(gym.Env):
           else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
-                  reward -=1
+                  reward -=10
+                  self.curr_visit_map[self.agent_pos[0],self.agent_pos[1]] +=1
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=0.1  
+                  reward -=1  *self.curr_visit_map[next_x,next_y]
+                  
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
+                  self.curr_visit_map[self.agent_pos[0]][self.agent_pos[1]] +=1
               # coin
               if(self.curr_map[next_x,next_y] == 4):
                   reward +=100
