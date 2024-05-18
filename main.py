@@ -18,6 +18,6 @@ import train
 vec_env = make_vec_env("MagicTowerEnv-v0",monitor_dir="models")
 print(train.train(vec_env,5000000))
 model = RecurrentPPO.load("models/best_model" )
-render_test.test(model,vec_env,200,20) 
-
+#render_test.render_test(model,vec_env,100) 
+render_test.test(model,vec_env,100) 
 

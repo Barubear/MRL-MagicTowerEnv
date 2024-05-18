@@ -34,7 +34,7 @@ class MagicTowerEnv(gym.Env):
          [ 0, 4,-1, 1, 0, 0, 0],
          ]))
 
-      self.max_step =10000
+      self.max_step =100000
       self.curr_step = 0
       
       self.start_pos = [3,7]
@@ -57,7 +57,7 @@ class MagicTowerEnv(gym.Env):
             2: (1,7),
           }
       self.key_index = 0
-      x,y = self.key_pos_seed[random.randint(0,2)]
+      x,y = self.key_pos_seed[self.key_index]
       self.curr_map = self.origin_map.copy()
       self.curr_map[x,y] = 5
 
@@ -211,43 +211,7 @@ class MagicTowerEnv(gym.Env):
           return observation, reward, terminated, truncated, info
      
 
-     def render(self):
-         if self.window is None:
-             pygame.init()
-             pygame.display.init()
-             self.window = pygame.display.set_mode(
-                (70, 80)
-            )
-         if self.clock is None :
-            self.clock = pygame.time.Clock()
-         canvas = pygame.Surface((70, 80))
-         canvas.fill((255, 255, 255))
-         pix_square_size = 10
-         for x in range(0,6):
-             for y in range(0,7):
-                 color =(255,255,255)
-                 if(self.curr_map[x][y] == -1):
-                     color = (0,0,0)
-                 if(self.curr_map[x][y] == 1):
-                     color = (0,0,255)
-                 if(self.curr_map[x][y] == 3):
-                     color = (0,255,0)
-                 if(self.curr_map[x][y] == 2):
-                     color = (255,0,0)
-                 if(self.curr_map[x][y] == 4):
-                     color = (255,255,0)  
-                 if(self.curr_map[x][y] == 5):
-                     color = (255,160,0) 
-                 pygame.draw.rect(canvas,color,
-                                  pygame.rect(
-                                      pix_square_size*(self.agent_pos[0],self.agent_pos[1]),
-                                     (pix_square_size,pix_square_size)
-                                     ))
-         self.window.blit(canvas, canvas.get_rect())
-         pygame.event.pump()
-         pygame.display.update()
-
-         self.clock.tick(self.metadata["render_fps"])
+    
      
 
     
