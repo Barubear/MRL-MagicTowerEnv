@@ -73,7 +73,7 @@ class SaceBaseCallback(BaseCallback):
         
         return True
 
-#print(train(model,vec_env,2000000))
+#print(train(model,vec_env,5000000))
 del model
 model = RecurrentPPO.load("models/best_model" )
 test(model,vec_env,200,20) 
