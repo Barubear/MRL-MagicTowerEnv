@@ -13,16 +13,16 @@ import torch
 
 import render_test
 import train
-vec_env = make_vec_env("MagicTowerEnv-v0",monitor_dir="models")
+vec_env = make_vec_env("MagicTowerEnv-v0",n_envs=8, monitor_dir="models")
 model = RecurrentPPO(
     "MlpLstmPolicy",
     vec_env,
     batch_size=1024,
-    n_steps=10240 // 1024,  # 等价于 buffer_size / batch_size
+    n_steps=2048,  # 等价于 buffer_size / batch_size
     learning_rate=0.0003,
     ent_coef=0.005,  # 类似于beta
     clip_range=0.2,  # 类似于epsilon
-    n_epochs=3,
+    n_epochs=32,
     gamma=0.995,
     gae_lambda=0.95,
     max_grad_norm=0.5,
