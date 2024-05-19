@@ -170,7 +170,7 @@ class MagicTowerEnv(gym.Env):
                   self.curr_visit_map[self.agent_pos[0],self.agent_pos[1]] +=1
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=1  *self.curr_visit_map[next_x,next_y]
+                  reward -=1  #*self.curr_visit_map[next_x,next_y]
                   
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
