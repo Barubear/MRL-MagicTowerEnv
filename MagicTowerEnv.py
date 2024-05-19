@@ -237,7 +237,7 @@ class MagicTowerEnv(gym.Env):
 register(
     id='MagicTowerEnv-v0',
     entry_point='MagicTowerEnv:MagicTowerEnv',
-    max_episode_steps=1000,
+    max_episode_steps=10000,
 )
            
           
