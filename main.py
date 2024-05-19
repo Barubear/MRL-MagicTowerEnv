@@ -19,7 +19,7 @@ model = RecurrentPPO(
     vec_env,
     batch_size=1024,
     n_steps=10240 // 1024,  # 等价于 buffer_size / batch_size
-    learning_rate=0.0003,
+    learning_rate=0.0001,
     ent_coef=0.005,  # 类似于beta
     clip_range=0.2,  # 类似于epsilon
     n_epochs=3,
@@ -28,9 +28,9 @@ model = RecurrentPPO(
     max_grad_norm=0.5,
     vf_coef=0.5,
     policy_kwargs=dict(
-        net_arch=dict(pi=[512, 1024], vf=[512, 1024]),
+        net_arch=dict(pi=[1024, 1024, 1024, 1024], vf=[1024, 1024, 1024, 1024]),
         lstm_hidden_size=256,  # 内存大小
-        n_lstm_layers=2
+        n_lstm_layers=3
     ),
     device='cuda' if torch.cuda.is_available() else 'cpu',
     verbose=1
