@@ -162,7 +162,7 @@ class MagicTowerEnv(gym.Env):
           
           #print(str(self.agent_pos )+ "->" +str(action) + "->"  +str([next_x,next_y] ))
           if(next_x < 0 or next_x >=7 or next_y < 0 or next_y >=8):
-              reward -=1
+              reward -=10
           else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
