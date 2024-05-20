@@ -14,15 +14,15 @@ import torch
 
 import render_test
 import train
-vec_env = make_vec_env("CurriculumMagicTowerEnv_lv1", n_envs=8,monitor_dir="models")
+vec_env = make_vec_env("CurriculumMagicTowerEnv_lv1",monitor_dir="models")
 model = RecurrentPPO(
     "MlpLstmPolicy",
     vec_env,
     batch_size=1024,
-    n_steps=512,  
+    n_steps=256,  
     ent_coef=0.005,  
     clip_range=0.2,   
-    n_epochs=8,
+    n_epochs=6,
     gamma=0.995,
     gae_lambda=0.95,
     max_grad_norm=0.5,

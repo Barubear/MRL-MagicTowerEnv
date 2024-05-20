@@ -2,6 +2,9 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 from gymnasium.envs.registration import register
+
+
+
 class CurriculumMagicTowerEnv_lv1(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
     def __init__(self,render_mode = "human",size = 7):
@@ -38,7 +41,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
             
           }
         self.key_index = 0
-        x,y = self.key_pos_seed[self.key_index% self.key_pos_seed.lenght]
+        x,y = self.key_pos_seed[self.key_index % len(self.key_pos_seed)]
         self.curr_map = self.origin_map.copy()
         self.curr_map[x,y] = 5
         #self.curr_visit_map = self.origin_visit_map.copy()
@@ -65,7 +68,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
            self.curr_step = 0
            self.if_have_key =False
            self.curr_HP = self.max_HP
-           x,y = self.key_pos_seed[self.key_index% self.key_pos_seed.lenght]
+           x,y = self.key_pos_seed[self.key_index% len(self.key_pos_seed)]
            self.key_index +=1
            self.curr_map = self.origin_map.copy()
            self.curr_map[x,y] = 5
@@ -160,7 +163,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
 
 
 register(
-    id='CurriculumMagicTowerEnv-lv1',
-    entry_point='CurriculumMagicTowerEnv:CurriculumMagicTowerEnv',
+    id='CurriculumMagicTowerEnv_lv1',
+    entry_point='CurriculumMagicTowerEnv_lv1:CurriculumMagicTowerEnv_lv1',
     max_episode_steps=10000,
 )
