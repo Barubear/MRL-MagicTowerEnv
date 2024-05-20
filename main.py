@@ -44,8 +44,8 @@ s_model = RecurrentPPO(
     verbose=1
 )
 lv1_path = 'CurriculumMdels/best_model_lv1'
-print(train.train(s_model,vec_env,3000000,lv1_path))
+#print(train.train(s_model,vec_env,3000000,lv1_path))
 s_model = RecurrentPPO.load(lv1_path )
 #render_test.render_test(model,vec_env,100) 
-render_test.test(s_model,vec_env,200) 
+render_test.test(s_model,vec_env,300,1) 
 
