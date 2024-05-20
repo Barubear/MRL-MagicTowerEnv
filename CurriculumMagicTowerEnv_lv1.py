@@ -2,7 +2,7 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 from gymnasium.envs.registration import register
-
+import random
 
 
 class CurriculumMagicTowerEnv_lv1(gym.Env):
@@ -40,8 +40,8 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
             1: (4,2),
             
           }
-        self.key_index = 0
-        x,y = self.key_pos_seed[self.key_index % len(self.key_pos_seed)]
+        self.key_index = 1
+        x,y = random.choice(self.key_pos_seed)
         self.curr_map = self.origin_map.copy()
         self.curr_map[x,y] = 5
         #self.curr_visit_map = self.origin_visit_map.copy()
@@ -68,7 +68,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
            self.curr_step = 0
            self.if_have_key =False
            self.curr_HP = self.max_HP
-           x,y = self.key_pos_seed[self.key_index% len(self.key_pos_seed)]
+           x,y = random.choice(self.key_pos_seed)
            self.key_index +=1
            self.curr_map = self.origin_map.copy()
            self.curr_map[x,y] = 5

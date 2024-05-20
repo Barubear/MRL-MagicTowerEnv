@@ -38,7 +38,7 @@ class CurriculumMagicTowerEnv_lv2(gym.Env):
         self.key_pos_seed= {
             0: (1,2),
             1: (4,2),
-            3: (3,2)
+            2: (3,2)
             
           }
         self.key_index = 0
