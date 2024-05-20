@@ -19,26 +19,33 @@ model = RecurrentPPO(
     "MlpLstmPolicy",
     vec_env,
     batch_size=1024,
-    n_steps=256,  
+    n_steps=128,  
     ent_coef=0.005,  
-    clip_range=0.2,   
-    n_epochs=6,
-    gamma=0.995,
-    gae_lambda=0.95,
-    max_grad_norm=0.5,
+    clip_range=0.3,   
+    n_epochs=4,
+    gamma=0.999,
+    gae_lambda=0.98,
+    learning_rate = 0.0002,
+    max_grad_norm=0.7,
     vf_coef=0.5,
     policy_kwargs=dict(
-        net_arch=dict(pi=[512, 1024], vf=[512, 1024]),
-        lstm_hidden_size=512,  # 内存大小
+        net_arch=dict(pi=[512, 1024,1024], vf=[512, 1024,1024]),
+        lstm_hidden_size=512,  
         n_lstm_layers=2
     ),
     device='cuda',
     verbose=1
 )
 
+s_model = RecurrentPPO(
+    "MlpLstmPolicy",
+    vec_env,
+    device='cuda',
+    verbose=1
+)
 lv1_path = 'CurriculumMdels/best_model_lv1'
-print(train.train(model,vec_env,3000000,lv1_path))
-model = RecurrentPPO.load(lv1_path )
+print(train.train(s_model,vec_env,3000000,lv1_path))
+s_model = RecurrentPPO.load(lv1_path )
 #render_test.render_test(model,vec_env,100) 
-render_test.test(model,vec_env,200) 
+render_test.test(s_model,vec_env,200) 
 

@@ -13,9 +13,9 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
         self.origin_map =np.transpose(np.array([
          [ 0, 0, 0, 3, 0, 0, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 2, 0, 0, 0, 2, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 0, 4, 0, 4, 0, 0],
+         [ 0, 2, 4, 0, 4, 2, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0, 1, 0, 0, 0],
          ]))
@@ -51,7 +51,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
 
     def _get_obs(self):
         obs_array = self.curr_map.copy()
-        agent_value = 20 -self.curr_HP
+        agent_value = 10 + self.curr_HP
         if self.if_have_key!= True:
             agent_value = -agent_value
         obs_array[self.agent_pos[0],self.agent_pos[1]] = agent_value
