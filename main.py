@@ -1,6 +1,7 @@
 
 import gymnasium as gym
 import MagicTowerEnv
+import CurriculumMagicTowerEnv_lv1
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C,PPO
@@ -13,7 +14,7 @@ import torch
 
 import render_test
 import train
-vec_env = make_vec_env("MagicTowerEnv-v0", n_envs=8,monitor_dir="models")
+vec_env = make_vec_env("CurriculumMagicTowerEnv_lv1", n_envs=8,monitor_dir="models")
 model = RecurrentPPO(
     "MlpLstmPolicy",
     vec_env,
@@ -35,8 +36,9 @@ model = RecurrentPPO(
     verbose=1
 )
 
-print(train.train(model,vec_env,2000000))
-model = RecurrentPPO.load("models/best_model" )
+lv1_path = 'CurriculumMdels/best_model_lv1'
+print(train.train(model,vec_env,3000000,lv1_path))
+model = RecurrentPPO.load(lv1_path )
 #render_test.render_test(model,vec_env,100) 
 render_test.test(model,vec_env,200) 
 

@@ -31,21 +31,22 @@ env = make_vec_env("MagicTowerEnv-v0",monitor_dir="models")
 
 
 
-def train(model,env,total_timesteps):
+def train(model,env,total_timesteps,path):
     start_msg = evaluate_policy(model,env,n_eval_episodes=20)
-    model.learn(total_timesteps, log_interval=4,progress_bar=True,callback = SaceBaseCallback())
+    model.learn(total_timesteps, log_interval=4,progress_bar=True,callback = SaceBaseCallback(path))
     #model.save(model_name)
     del model # remove to demonstrate saving and loading
-    model = RecurrentPPO.load('models/best_model')
+    model = RecurrentPPO.load(path)
     trained_msg = evaluate_policy(model,env,n_eval_episodes=20)
     return start_msg,trained_msg
 
 
 
 class SaceBaseCallback(BaseCallback):
-    def __init__(self, verbose: int = 0):
+    def __init__(self, path,verbose: int = 0):
         super().__init__(verbose)
         self.best = -float('inf')
+        self.path = path
     
     def _on_step(self) -> bool:
         if self.n_calls%10000 != 0:
@@ -54,7 +55,7 @@ class SaceBaseCallback(BaseCallback):
         mean_reward = sum(y[-100:])/len(y[-100:])
         if mean_reward >self.best:
             self.best = mean_reward
-            self.model.save('models/best_model')
+            self.model.save(self.path)
         
         return True
     
