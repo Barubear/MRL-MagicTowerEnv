@@ -18,12 +18,12 @@ import torch
 
 #env = gym.make('MagicTowerEnv-v0')
 
-#model = DQN("MultiInputPolicy", env, verbose=1)
+#model = DQN("MultiInputLstmPolicy", env, verbose=1)
 
 
-env = make_vec_env("MagicTowerEnv-v0",monitor_dir="models")
 
-# 添加好奇心机制
+
+
 
 
 

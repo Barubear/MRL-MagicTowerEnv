@@ -74,15 +74,18 @@ class MagicTowerEnv(gym.Env):
       self.curr_visit_map = self.origin_visit_map.copy()
 
 
-      #self.observation_space = spaces.Dict({
-      #      "map": spaces.Box(-1,5,(width, height),np.int32),#map
-      #      "if_have_key": spaces.Discrete(2),  #if_have_key
-      #      "hp": spaces.Discrete(5)  #hp
-      #    })
+      self.observation_space = spaces.Dict({
+            "agent": spaces.Box(0,7,(1 ,2),np.int32),
+            'coin':spaces.Box(0,7,(3 ,2),np.int32),
+            'coin':spaces.Box(0,7,(1 ,2),np.int32),
+            'enemy':spaces.Box(0,7,(1 ,2),np.int32),
+            "if_have_key": spaces.Discrete(2),  #if_have_key
+            "hp": spaces.Discrete(5)  #hp
+          })
 
-      self.observation_space = spaces.Box(low=-20, high=20,
-                                        shape=(width, height),dtype=np.int32)
-
+      #elf.observation_space = spaces.Box(low=-20, high=20,
+                                        #shape=(width, height),dtype=np.int32)
+      
           
           # "right", "up", "left", "down"
       self.action_space = spaces.Discrete(4)
