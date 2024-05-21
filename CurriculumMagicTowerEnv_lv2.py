@@ -146,7 +146,7 @@ class CurriculumMagicTowerEnv_lv2(gym.Env):
                      self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                      self.curr_map[next_x,next_y] = 1
                      self.agent_pos = [next_x,next_y]
-                  
+                     self.curr_nemy_num -=1
                      self.curr_HP -= 1
                      if(self.curr_HP <= 0):
                          reward -=1000

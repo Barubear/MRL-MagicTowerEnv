@@ -24,30 +24,33 @@ def lv1_train():
     "MlpLstmPolicy",
     lv1_env,
     learning_rate=3e-4,
-    gamma=0.99,
+    gamma=0.999,
     gae_lambda=0.95,
     clip_range=0.2,
     ent_coef=0.01,
     n_steps=128,
     batch_size=64,
     n_epochs=10,
-    n_lstm_layers=1,
-    lstm_hidden_size=256,
-    verbose=1
+    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=1),
+    verbose=1,
+    
     )
 
     lv1_path = 'CurriculumMdels/best_model_lv1'
 
-    print(train.train(or_model,lv1_env,3000000,lv1_path))
+    #print(train.train(or_model,lv1_env,3000000,lv1_path))
     lv1_model = RecurrentPPO.load(lv1_path)
-    render_test.test(lv1_model,lv1_env,3000,10) 
-
-lv1_train()
+    render_test.test(lv1_model,lv1_env,50,1) 
 
 
-#lv2_path = 'CurriculumMdels/best_model_lv2'
-#lv2_env = make_vec_env("CurriculumMagicTowerEnv_lv2",monitor_dir="models")
-#print(train.train(lv1_model,lv2_env ,3000000,lv2_path))
-#lv2_model = RecurrentPPO.load(lv2_path)
 
+def lv2_train():
+    lv2_path = 'CurriculumMdels/best_model_lv2'
+    lv1_path = 'CurriculumMdels/best_model_lv1'
+    lv1_model = RecurrentPPO.load(lv1_path)
+    lv2_env = make_vec_env("CurriculumMagicTowerEnv_lv2",monitor_dir="models")
+    print(train.train(lv1_model,lv2_env ,3000000,lv2_path))
+    lv2_model = RecurrentPPO.load(lv2_path)
+    render_test.test(lv2_model,lv2_env,1000,10) 
 
+lv2_train()

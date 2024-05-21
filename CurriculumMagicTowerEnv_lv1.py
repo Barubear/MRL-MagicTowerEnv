@@ -36,8 +36,8 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
         self.curr_nemy_num = self.max_enemy_num
         self.if_have_key =False
         self.key_pos_seed= {
-            0: (1,2),
-            1: (4,2),
+            0: (1,3),
+            1: (4,3),
             
           }
         self.key_index = 1
@@ -117,13 +117,14 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
               # coin
               if(self.curr_map[next_x,next_y] == 4):
                   reward +=100
-                  
+                  self.curr_coin_num-=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
               #key
               if(self.curr_map[next_x,next_y] == 5):
                   reward +=500
+                  self.curr_coin_num-=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
@@ -140,7 +141,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
                     reward -=100
               #enemy
               if(self.curr_map[next_x,next_y] == 2):
-                
+                     self.curr_nemy_num -=1
                      reward +=50*self.curr_HP
                      self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                      self.curr_map[next_x,next_y] = 1
