@@ -38,10 +38,10 @@ def lv1_train():
 
     lv1_path = 'CurriculumMdels/best_model_lv1'
 
-    #print(train.train(or_model,lv1_env,3000000,lv1_path))
+    print(train.train(or_model,lv1_env,2000000,lv1_path))
     lv1_model = RecurrentPPO.load(lv1_path)
     render_test.test(lv1_model,lv1_env,50,1) 
-
+lv1_train()
 
 
 def lv2_train():
@@ -53,4 +53,4 @@ def lv2_train():
     lv2_model = RecurrentPPO.load(lv2_path)
     render_test.test(lv2_model,lv2_env,1000,10) 
 
-lv2_train()
+#lv2_train()

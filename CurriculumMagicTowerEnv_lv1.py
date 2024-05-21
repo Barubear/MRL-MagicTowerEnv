@@ -10,16 +10,21 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
     def __init__(self,render_mode = "human",size = 7):
         super().__init__()
         self.size = size
+        #coin:4
+        #enemy:2
         self.origin_map =np.transpose(np.array([
          [ 0, 0, 0, 3, 0, 0, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 2, 4, 0, 4, 2, 0],
+         [ 0, 4, 2, 0, 2, 4, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0, 1, 0, 0, 0],
          ]))
-        
+        self.key_pos_seed= {
+            0: (1,3),
+            1: (5,3),
+          }
         self.max_step =10000
         self.curr_step = 0
       
@@ -35,11 +40,7 @@ class CurriculumMagicTowerEnv_lv1(gym.Env):
         self.max_enemy_num = 2
         self.curr_nemy_num = self.max_enemy_num
         self.if_have_key =False
-        self.key_pos_seed= {
-            0: (1,3),
-            1: (4,3),
-            
-          }
+        
         self.key_index = 1
         x,y = random.choice(self.key_pos_seed)
         self.curr_map = self.origin_map.copy()
