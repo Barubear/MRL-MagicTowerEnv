@@ -13,38 +13,38 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
         #coin:4
         #enemy:2
         self.origin_map =np.transpose(np.array([
-         [ 0, 0, 0, 3, 0, 0, 0],
-         [ 0, 0, 0,-1, 0, 0, 0],
-         [ 4,-1, 0, 4, 0,-1, 4],
-         [ 0, 2, 0, 2, 0, 2, 0],
-         [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 4, 0, 0, 3, 0, 0, 4],
+         [ 0, 2, 0, 0, 0, 2, 0],
+         [ 0, 0,-1, 0,-1, 0, 0],
          [ 0, 0, 0, 1, 0, 0, 0],
+         [ 0, 0,-1, 0,-1, 0, 0],
+         [ 0, 2, 0, 0, 0, 2, 0],
+         [ 4, 0, 0, 0, 0, 0, 4],
          ]))
         self.key_pos_seed= {
-            0: (0,2),
-            1: (3,2),
-            2: (6,2)
-            
+            0: (0,0),
+            1: (0,6),
+            2: (6,0),
+            3: (6,6),
           }
         self.max_step =10000
         self.curr_step = 0
       
-        self.start_pos = [3,6]
+        self.start_pos = [3,3]
         self.agent_pos = self.start_pos.copy()
 
-        self.max_HP = 3
+        self.max_HP = 4
         self.curr_HP = self.max_HP
 
-        self.max_coin_num = 3
+        self.max_coin_num = 4
         self.curr_coin_num = self.max_coin_num
 
-        self.max_enemy_num = 3
+        self.max_enemy_num = 4
         self.curr_nemy_num = self.max_enemy_num
         self.if_have_key =False
         
         self.key_index = 0
-        x,y = self.key_pos_seed[self.key_index % len(self.key_pos_seed)]
+        x,y = random.choice(self.key_pos_seed)
         self.curr_map = self.origin_map.copy()
         self.curr_map[x,y] = 5
         #self.curr_visit_map = self.origin_visit_map.copy()
@@ -71,7 +71,7 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
            self.curr_step = 0
            self.if_have_key =False
            self.curr_HP = self.max_HP
-           x,y = self.key_pos_seed[self.key_index% len(self.key_pos_seed)]
+           x,y = random.choice(self.key_pos_seed)
            self.key_index +=1
            self.curr_map = self.origin_map.copy()
            self.curr_map[x,y] = 5
