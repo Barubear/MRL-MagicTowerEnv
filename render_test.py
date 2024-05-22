@@ -81,9 +81,11 @@ def test(model,env,max_step = 100,print_log_step = 1):
         if step % print_log_step == 0:
             print(info,action)
             print(state_value)
-        if dones or step >=max_step:
-            info = env.reset()
+            print(obs)
+
+        if dones or step ==max_step:
             print(step)
+            
             break
         step +=1
 

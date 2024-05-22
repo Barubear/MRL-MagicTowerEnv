@@ -16,10 +16,6 @@ from sb3_contrib import RecurrentPPO
 import torch
 
 
-#env = gym.make('MagicTowerEnv-v0')
-
-#model = DQN("MultiInputLstmPolicy", env, verbose=1)
-
 
 
 
