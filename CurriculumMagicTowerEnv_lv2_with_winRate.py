@@ -120,13 +120,14 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
               # coin
               if(self.curr_map[next_x,next_y] == 4):
                   reward +=100
-                  
+                  self.curr_coin_num -=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
               #key
               if(self.curr_map[next_x,next_y] == 5):
                   reward +=500
+                  self.curr_coin_num -=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
@@ -149,6 +150,7 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
                         reward -= 20*self.curr_HP
                        
                     self.curr_HP -= 1
+                    self.curr_nemy_num-=1
                     if self.curr_HP <= 0:
                         reward -= 1000
                         terminated = True

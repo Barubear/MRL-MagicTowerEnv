@@ -5,7 +5,7 @@ from gymnasium.envs.registration import register
 import random
 
 
-class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
+class CurriculumMagicTowerEnv_lv3_with_winRate(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
     def __init__(self,render_mode = "human",size = 7):
         super().__init__()
@@ -15,11 +15,11 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
         self.origin_map =np.transpose(np.array([
          [ 4, 0, 0, 3, 0, 0, 4],
          [ 0, 2, 0, 0, 0, 2, 0],
-         [ 0, 0,-1, 0,-1, 0, 0],
-         [ 0, 0, 0, 1, 0, 0, 0],
-         [ 0, 0,-1, 0,-1, 0, 0],
-         [ 0, 2, 0, 0, 0, 2, 0],
-         [ 4, 0, 0, 0, 0, 0, 4],
+         [-1, 0,-1, 0,-1, 0,-1],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 2,-1, 0,-1, 2, 0],
+         [ 4, 0, 0, 1, 0, 0, 4],
          ]))
         self.key_pos_seed= {
             0: (0,0),
@@ -120,13 +120,14 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
               # coin
               if(self.curr_map[next_x,next_y] == 4):
                   reward +=100
-                  
+                  self.curr_coin_num-=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
               #key
               if(self.curr_map[next_x,next_y] == 5):
                   reward +=500
+                  self.curr_coin_num-=1
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
                   self.agent_pos = [next_x,next_y]
@@ -149,6 +150,7 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
                         reward -= 20*self.curr_HP
                        
                     self.curr_HP -= 1
+                    self.curr_nemy_num-=1
                     if self.curr_HP <= 0:
                         reward -= 1000
                         terminated = True
@@ -169,7 +171,7 @@ class CurriculumMagicTowerEnv_lv2_with_winRate(gym.Env):
 
 
 register(
-    id='CurriculumMagicTowerEnv_lv2_with_winRate',
-    entry_point='CurriculumMagicTowerEnv_lv2_with_winRate:CurriculumMagicTowerEnv_lv2_with_winRate',
+    id='CurriculumMagicTowerEnv_lv3_with_winRate',
+    entry_point='CurriculumMagicTowerEnv_lv3_with_winRate:CurriculumMagicTowerEnv_lv3_with_winRate',
     max_episode_steps=10000,
 )
