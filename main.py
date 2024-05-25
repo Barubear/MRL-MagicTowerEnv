@@ -26,24 +26,24 @@ def lv1_train():
     "MlpLstmPolicy",
     lv1_env,
     learning_rate=1e-4,
-    gamma=0.999,
+    gamma=0.99,
     gae_lambda=0.95,
     clip_range=0.2,
-    ent_coef=0.05,
+    ent_coef=0.1,
     n_steps=512,
-    batch_size=64,
+    batch_size=128,
     n_epochs=10,
-    policy_kwargs=dict(lstm_hidden_size=512, n_lstm_layers=2),
+    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
     verbose=1,
     
     )
 
     lv1_path = 'CurriculumMdels_Round2/best_model_lv1_with_winRate'
 
-    #print(train.train(or_model,lv1_env,2000000,lv1_path))
+    print(train.train(or_model,lv1_env,1000000,lv1_path))
     lv1_model = RecurrentPPO.load(lv1_path)
     render_test.test(lv1_model,lv1_env,50,1) 
-#lv1_train()
+lv1_train()
 
 
 def lv2_train():
@@ -68,4 +68,4 @@ def lv3_train():
     lv3_model = RecurrentPPO.load(lv3_path)
     render_test.test(lv3_model,lv3_env,1000,10) 
 
-lv3_train()
+#lv3_train()
