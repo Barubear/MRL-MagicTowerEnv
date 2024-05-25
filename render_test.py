@@ -60,7 +60,7 @@ def next_step(model, obs,device):
 
 
 
-def test(model,env,max_step = 100,print_log_step = 1):
+def test(model,env,max_step = 100,print_log_step = 1,ifprint = True):
     obs = env.reset()
     over =False
     step =0
@@ -78,7 +78,7 @@ def test(model,env,max_step = 100,print_log_step = 1):
         
         
 
-        if step % print_log_step == 0:
+        if ifprint and step % print_log_step == 0:
             print(info,action)
             print(state_value)
             print(obs)

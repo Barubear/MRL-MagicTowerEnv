@@ -52,18 +52,20 @@ def lv2_train():
     lv1_model = RecurrentPPO.load(lv1_path)
     lv2_env = make_vec_env("CurriculumMagicTowerEnv_lv2_with_winRate",monitor_dir="models")
     lv1_model.set_env(lv2_env)
-    print(train.train(lv1_model,lv2_env ,4000000,lv2_path))
+    #print(train.train(lv1_model,lv2_env ,4000000,lv2_path))
     lv2_model = RecurrentPPO.load(lv2_path)
     render_test.test(lv2_model,lv2_env,50,1) 
-lv2_train()
+#lv2_train()
+
+
 def lv3_train():
-    lv2_path = 'CurriculumMdels_Round2/best_model_lv2_with_winRate'
-    lv3_path = 'CurriculumMdels_Round2/best_model_lv2_with_winRate'
+    lv2_path = 'CurriculumMdels_Round2/best_model_lv3_with_winRate'
+    lv3_path = 'CurriculumMdels_Round2/best_model_lv3_with_winRate'
     lv2_model = RecurrentPPO.load(lv2_path)
-    lv3_env = make_vec_env("CurriculumMagicTowerEnv_lv3_with_winRate",monitor_dir="models")
+    lv3_env = make_vec_env("CurriculumMagicTowerEnv_lv3_with_winRate",monitor_dir="models_Round2")
     lv2_model.set_env(lv3_env)
     print(train.train(lv2_model,lv3_env ,2000000,lv3_path))
     lv3_model = RecurrentPPO.load(lv3_path)
     render_test.test(lv3_model,lv3_env,1000,10) 
 
-
+lv3_train()

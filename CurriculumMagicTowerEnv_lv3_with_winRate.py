@@ -30,7 +30,7 @@ class CurriculumMagicTowerEnv_lv3_with_winRate(gym.Env):
         self.max_step =10000
         self.curr_step = 0
       
-        self.start_pos = [3,3]
+        self.start_pos = [3,6]
         self.agent_pos = self.start_pos.copy()
 
         self.max_HP = 4
