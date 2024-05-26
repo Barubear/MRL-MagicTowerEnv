@@ -25,16 +25,16 @@ def lv1_train():
     or_model  = RecurrentPPO(
     "MlpLstmPolicy",
     lv1_env,
-    learning_rate=1e-4,
-    gamma=0.99,
-    gae_lambda=0.95,
-    clip_range=0.2,
-    ent_coef=0.1,
-    n_steps=512,
-    batch_size=128,
-    n_epochs=10,
-    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
-    verbose=1,
+    "learning_rate": 5e-5,  # 降低学习率
+    "gamma": 0.999,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "ent_coef": 0.15,  # 增加熵系数
+    "n_steps": 1024,  # 增加时间步长
+    "batch_size": 128,  # 增加批次大小
+    "n_epochs": 20,  # 增加训练周期
+    "policy_kwargs": dict(lstm_hidden_size=512, n_lstm_layers=2),  # 增加LSTM隐藏单元和层数
+    "verbose": 1,
     
     )
 
