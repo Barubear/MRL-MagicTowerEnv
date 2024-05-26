@@ -25,7 +25,7 @@ class Celx100MagicTowerEnv_with_winRate(gym.Env):
          [ 4,-1, 0, 0, 1, 0, 0, 0, 0, 0],
          ]))
         
-        self.max_step =10000
+        self.max_step =100000
         self.curr_step = 0
       
         self.start_pos = [4,9]
@@ -166,5 +166,5 @@ class Celx100MagicTowerEnv_with_winRate(gym.Env):
 register(
     id='Celx100MagicTowerEnv_with_winRate',
     entry_point='Celx100MagicTowerEnv_with_winRate:Celx100MagicTowerEnv_with_winRate',
-    max_episode_steps=10000,
+    max_episode_steps=100000,
 )
