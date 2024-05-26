@@ -38,11 +38,13 @@ def lv1_train():
     
     )
 
-    lv1_path = 'CurriculumMdels_Round2/best_model_lv1_with_winRate'
-
-    print(train.train(or_model,lv1_env,1000000,lv1_path))
+    lv1_path = 'CurriculumMdels_Round3/best_model_lv1_reTrain_with_winRate'
+    lv1model_path = 'CurriculumMdels_Round3/best_model_lv1_with_winRate'
+    lv1_model = RecurrentPPO.load(lv1model_path)
+    lv1_model.set_env(lv1_env)
+    print(train.train(lv1_model,lv1_env,2000000,lv1_path))
     lv1_model = RecurrentPPO.load(lv1_path)
-    render_test.test(lv1_model,lv1_env,50,1) 
+    render_test.test(lv1_model,lv1_env,1000,20) 
 lv1_train()
 
 

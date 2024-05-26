@@ -13,31 +13,33 @@ class CurriculumMagicTowerEnv_lv1_with_winRate(gym.Env):
          #coin:4
         #enemy:2
         self.origin_map =np.transpose(np.array([
-         [ 0, 0, 0, 3, 0, 0, 0],
+         [ 4, 0, 0, 3, 0, 2, 0],
+         [ 0, 2,-1, 0, 0, 0, 4],
+         [ 0, 0, 0, 0, 0,-1, 0],
          [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 4, 2, 0, 2, 4, 0],
-         [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 0, 0, 0, 0, 0, 0],
-         [ 0, 0, 0, 1, 0, 0, 0],
+         [ 0,-1, 0, 0, 0, 4, 0],
+         [ 2, 0, 0, 0, 0,-1, 0],
+         [ 0, 4, 0, 1, 0, 0, 2],
          ]))
         self.key_pos_seed= {
-            0: (1,3),
-            1: (5,3),
+            0: (0,0),
+            1: (6,1),
+            2: (1,6),
+            3: (5,4),
           }
-        self.max_step =10000
+        self.max_step =50000
         self.curr_step = 0
       
         self.start_pos = [3,6]
         self.agent_pos = self.start_pos.copy()
 
-        self.max_HP = 2
+        self.max_HP = 4
         self.curr_HP = self.max_HP
 
-        self.max_coin_num = 2
+        self.max_coin_num = 4
         self.curr_coin_num = self.max_coin_num
 
-        self.max_enemy_num = 2
+        self.max_enemy_num = 4
         self.curr_nemy_num = self.max_enemy_num
         self.if_have_key =False
        
@@ -171,5 +173,5 @@ class CurriculumMagicTowerEnv_lv1_with_winRate(gym.Env):
 register(
     id='CurriculumMagicTowerEnv_lv1_with_winRate',
     entry_point='CurriculumMagicTowerEnv_lv1_with_winRate:CurriculumMagicTowerEnv_lv1_with_winRate',
-    max_episode_steps=10000,
+    max_episode_steps=50000,
 )
