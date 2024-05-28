@@ -4,7 +4,7 @@ import MagicTowerEnv
 import CurriculumMagicTowerEnv_lv1
 import CurriculumMagicTowerEnv_lv1_with_winRate
 import CurriculumMagicTowerEnv_lv2_with_winRate
-import Celx100MagicTowerEnv_with_winRate
+import CurriculumMagicTowerEnv_lv3_with_winRate
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C,PPO
@@ -19,24 +19,30 @@ import render_test
 import train
 
 def lv1_train():
-    lv1_env = make_vec_env("Celx100MagicTowerEnv_with_winRate",monitor_dir="models")
+    lv1_env = make_vec_env("CurriculumMagicTowerEnv_lv1_with_winRate",monitor_dir="models")
+
+
     or_model  = RecurrentPPO(
     "MlpLstmPolicy",
     lv1_env,
-    learning_rate= 5e-5,  # 降低学习率
-    gamma= 0.999,
+    learning_rate=1e-4,
+    gamma=0.99,
     gae_lambda=0.95,
-    clip_range= 0.2,
-    ent_coef= 0.2,  # 增加熵系数
-    n_steps= 1024,  # 增加时间步长
-    batch_size= 512,  # 增加批次大小
-    n_epochs= 20,  # 增加训练周期
-    policy_kwargs= dict(lstm_hidden_size=1024, n_lstm_layers=3),  # 增加LSTM隐藏单元和层数
-    verbose= 1,
+    clip_range=0.2,
+    ent_coef=0.1,
+    n_steps=512,
+    batch_size=128,
+    n_epochs=10,
+    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
+    verbose=1,
+    
     )
 
-    lv1_path = 'x100Mdels_Round3/best_model'
-    print(train.train(or_model,lv1_env,5000000,lv1_path))
+    lv1_path = 'CurriculumMdels_Round3/best_model_lv1_reTrain_with_winRate'
+    lv1model_path = 'CurriculumMdels_Round3/best_model_lv1_with_winRate'
+    lv1_model = RecurrentPPO.load(lv1model_path)
+    lv1_model.set_env(lv1_env)
+    print(train.train(lv1_model,lv1_env,2000000,lv1_path))
     lv1_model = RecurrentPPO.load(lv1_path)
     render_test.test(lv1_model,lv1_env,1000,20) 
 lv1_train()
