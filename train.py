@@ -1,31 +1,8 @@
-import gymnasium as gym
-from gymnasium import spaces
-import MagicTowerEnv
-from stable_baselines3 import DQN
+
 from stable_baselines3.common.evaluation import evaluate_policy
-from stable_baselines3 import A2C,PPO
-from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.results_plotter import load_results,ts2xy
 from stable_baselines3.common.callbacks import BaseCallback
-
-from sb3_contrib.common import utils
-
-
 from sb3_contrib import RecurrentPPO
-
-import torch
-
-
-
-
-
-
-
-
-
-
-
-
 
 def train(model,env,total_timesteps,path):
     start_msg = evaluate_policy(model,env,n_eval_episodes=20)

@@ -1,10 +1,6 @@
 
 import gymnasium as gym
-import MagicTowerEnv
-import CurriculumMagicTowerEnv_lv1
-import CurriculumMagicTowerEnv_lv1_with_winRate
-import CurriculumMagicTowerEnv_lv2_with_winRate
-import CurriculumMagicTowerEnv_lv3_with_winRate
+from Envs.modularEnv.BattleModuleMagicTowerEnv import BattleModuleMagicTowerEnv
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C,PPO
@@ -18,56 +14,32 @@ import torch
 import render_test
 import train
 
-def lv1_train():
-    lv1_env = make_vec_env("CurriculumMagicTowerEnv_lv1_with_winRate",monitor_dir="models")
+def BattleModuletrain():
+    env = make_vec_env("BattleModuleMagicTowerEnv",monitor_dir="BattleModules")
 
 
-    or_model  = RecurrentPPO(
+    model  = RecurrentPPO(
     "MlpLstmPolicy",
-    lv1_env,
-    learning_rate=1e-4,
+    env,
+    learning_rate=3e-4,
     gamma=0.99,
     gae_lambda=0.95,
     clip_range=0.2,
     ent_coef=0.1,
-    n_steps=512,
-    batch_size=128,
-    n_epochs=10,
-    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
+    n_steps=32,
+    batch_size=64,
+    n_epochs=6,
+    policy_kwargs=dict(lstm_hidden_size=128, n_lstm_layers=2),
     verbose=1,
     
     )
 
-    lv1_path = 'CurriculumMdels_Round3/best_model_lv1_reTrain_with_winRate'
-    lv1model_path = 'CurriculumMdels_Round3/best_model_lv1_with_winRate'
-    lv1_model = RecurrentPPO.load(lv1model_path)
-    lv1_model.set_env(lv1_env)
-    print(train.train(lv1_model,lv1_env,2000000,lv1_path))
-    lv1_model = RecurrentPPO.load(lv1_path)
-    render_test.test(lv1_model,lv1_env,1000,20) 
-lv1_train()
+    save_path = 'CurriculumMdels_Round3/best_model_lv1_reTrain_with_winRate'
+    
+   
+    print(train.train(model,env,3000000,save_path))
+    model = RecurrentPPO.load(save_path)
+    render_test.test(model,env,1000,20) 
+BattleModuletrain()
 
 
-def lv2_train():
-    lv2_path = 'CurriculumMdels_Round2/best_model_lv2_with_winRate'
-    lv1_path = 'CurriculumMdels_Round2/best_model_lv1_with_winRate'
-    lv1_model = RecurrentPPO.load(lv1_path)
-    lv2_env = make_vec_env("CurriculumMagicTowerEnv_lv2_with_winRate",monitor_dir="models")
-    lv1_model.set_env(lv2_env)
-    #print(train.train(lv1_model,lv2_env ,4000000,lv2_path))
-    lv2_model = RecurrentPPO.load(lv2_path)
-    render_test.test(lv2_model,lv2_env,50,1) 
-#lv2_train()
-
-
-def lv3_train():
-    lv2_path = 'CurriculumMdels_Round2/best_model_lv3_with_winRate'
-    lv3_path = 'CurriculumMdels_Round2/best_model_lv3_with_winRate'
-    lv2_model = RecurrentPPO.load(lv2_path)
-    lv3_env = make_vec_env("CurriculumMagicTowerEnv_lv3_with_winRate",monitor_dir="models_Round2")
-    lv2_model.set_env(lv3_env)
-    print(train.train(lv2_model,lv3_env ,2000000,lv3_path))
-    lv3_model = RecurrentPPO.load(lv3_path)
-    render_test.test(lv3_model,lv3_env,1000,10) 
-
-#lv3_train()
