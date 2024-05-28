@@ -7,7 +7,7 @@ import random
 
 class Celx100MagicTowerEnv_with_winRate(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
-    def __init__(self,render_mode = "human",size = 7):
+    def __init__(self,render_mode = "human",size = 10):
         super().__init__()
         self.size = size
         #coin:4
@@ -96,15 +96,15 @@ class Celx100MagicTowerEnv_with_winRate(gym.Env):
           
           
           if(next_x < 0 or next_x >=7 or next_y < 0 or next_y >=7):
-              reward -=10
+              reward -=1
           else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
-                  reward -=10
+                  reward -=1
                   #self.curr_visit_map[self.agent_pos[0],self.agent_pos[1]] +=1
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=0.5  
+                  reward -=0.1 
                   
                   self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                   self.curr_map[next_x,next_y] = 1
