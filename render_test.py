@@ -81,7 +81,7 @@ def test(model,env,max_step = 100,print_log_step = 1,ifprint = True):
         if ifprint and step % print_log_step == 0:
             print(info,action)
             print(state_value)
-            print(obs)
+            #print(obs)
 
         if dones or step ==max_step:
             print(step)

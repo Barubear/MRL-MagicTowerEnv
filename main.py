@@ -15,31 +15,33 @@ import render_test
 import train
 
 def BattleModuletrain():
-    env = make_vec_env("BattleModuleMagicTowerEnv",monitor_dir="BattleModules")
+    save_path = 'modules/BattleModule/Battle_best_model'
+    log_path = 'logs/BattleModule'
+
+    env = make_vec_env("BattleModuleMagicTowerEnv",monitor_dir=log_path)
 
 
     model  = RecurrentPPO(
     "MlpLstmPolicy",
     env,
-    learning_rate=3e-4,
+    learning_rate=1e-4,
     gamma=0.99,
     gae_lambda=0.95,
     clip_range=0.2,
-    ent_coef=0.1,
-    n_steps=32,
-    batch_size=64,
-    n_epochs=6,
-    policy_kwargs=dict(lstm_hidden_size=128, n_lstm_layers=2),
+    ent_coef=0.15,
+    batch_size=512,
+    n_steps=256,
+    n_epochs=10,
+    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
     verbose=1,
     
     )
 
-    save_path = 'CurriculumMdels_Round3/best_model_lv1_reTrain_with_winRate'
     
    
-    print(train.train(model,env,3000000,save_path))
+    print(train.train(model,env,3000000,save_path,log_path))
     model = RecurrentPPO.load(save_path)
-    render_test.test(model,env,1000,20) 
+    render_test.test(model,env,1000,100) 
 BattleModuletrain()
 
 

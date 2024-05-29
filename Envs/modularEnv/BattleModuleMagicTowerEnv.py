@@ -14,7 +14,7 @@ class BattleModuleMagicTowerEnv(gym.Env):
         #coin:4
         #enemy:2
         self.origin_map =np.transpose(np.array([
-         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
          [ 0,-1, 0, 0, 0, 0, 0, 0, 0, 0],
          [ 0, 0, 0,-1, 0,-1, 0, 0,-1,-1],
          [-1,-1, 0,-1, 0,-1, 0, 0, 0, 0],
@@ -37,7 +37,7 @@ class BattleModuleMagicTowerEnv(gym.Env):
 
         self.max_step =100000
         self.curr_step = 0
-        self.max_HP = 4
+        self.max_HP = 5
         self.curr_HP = self.max_HP
         self.max_enemy_num = 5
         self.curr_nemy_num = self.max_enemy_num
@@ -132,23 +132,31 @@ class BattleModuleMagicTowerEnv(gym.Env):
               #enemy
               if(self.curr_map[next_x,next_y] == 2):
                     ifdone = True
-                    if random.random() < 0.3:  # 50% chance of winning
-                        reward +=50*self.curr_HP
+                    if random.random() < 0.4:  # 50% chance of winning
+                        reward +=200
                     else:  #
-                        reward -= 20*self.curr_HP
-                       
-                    self.curr_HP -= 1
+                        reward += 100
+                        self.curr_HP -= 1
+                    
                     self.curr_nemy_num-=1
                     if self.curr_HP <= 0:
-                        reward -= 1000
+                        reward -= 500
                         terminated = True
-                     
+                    if self.curr_nemy_num == 0:
+                        reward +=500
+                        terminated = True
                     self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 0
                     self.curr_map[next_x,next_y] = 1
                     self.agent_pos = [next_x,next_y]
                     for enemy in self.enemy_list:
                         if enemy[0] == next_x and enemy[1] == next_y:
                             enemy = (-1,-1)
+            #enemy
+              if(self.curr_map[next_x,next_y] == 3):
+                  if self.curr_HP >1:
+                      reward -= self.curr_HP*100
+                  else:
+                   reward += 1000
           
           observation = self._get_obs()
           info = self._get_info(ifdone)
