@@ -68,10 +68,16 @@ def test(model,env,max_step = 100,print_log_step = 1,ifprint = True):
     while True:
         
         action, _states = model.predict(obs)
-        obs_tensor = torch.tensor(obs).to(device)
+
+        device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
+
+# 将obs字典中的每个值转换为PyTorch张量，并放入新的字典中
+        obs_tensor_dict = {key: torch.as_tensor(obs, device=device) for (key, obs) in obs.items()}
+
+
         _states_tensor = torch.tensor(_states,dtype=torch.float32).to(device)
         episode_starts = torch.tensor([True] ,dtype=torch.float32).to(device)
-        state_value = model.policy.predict_values(obs_tensor,_states_tensor ,episode_starts)
+        state_value = model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
 
         obs, rewards, dones, info  = env.step(action)
         
