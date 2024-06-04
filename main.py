@@ -1,6 +1,6 @@
 
 import gymnasium as gym
-from Envs.modularEnv.BattleModuleMagicTowerEnv import BattleModuleMagicTowerEnv
+from Envs.modularEnv.BattleModuleMagicTowerEnv_6x6 import BattleModuleMagicTowerEnv_6x6
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C,PPO
@@ -17,30 +17,20 @@ def BattleModuletrain():
     save_path = 'modules/BattleModule/Battle_best_model'
     log_path = 'logs/BattleModuleLog'
 
-    env = make_vec_env("BattleModuleMagicTowerEnv",monitor_dir=log_path)
+    env = make_vec_env("BattleModuleMagicTowerEnv_6x6",monitor_dir=log_path)
 
 
-    model  = RecurrentPPO(
+    model = RecurrentPPO(
     "MultiInputLstmPolicy",
     env,
-    learning_rate=1e-4,
-    gamma=0.99,
-    gae_lambda=0.95,
-    clip_range=0.2,
-    ent_coef=0.15,
-    batch_size=512,
-    n_steps=256,
-    n_epochs=10,
-    policy_kwargs=dict(lstm_hidden_size=256, n_lstm_layers=2),
     verbose=1,
     
-    )
+    ) 
 
-    
-   
-    print(train.train(model,env,2000000,save_path,log_path,10))
+    print(train.train(model,env,3000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
-    render_test.test(model,env,1000,100) 
+    render_test.test(model,env,500,10) 
 BattleModuletrain()
+
 
 

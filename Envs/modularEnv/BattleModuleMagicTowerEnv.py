@@ -14,58 +14,56 @@ class BattleModuleMagicTowerEnv(gym.Env):
         #coin:4
         #enemy:2
         self.origin_map =np.transpose(np.array([
-         [ 0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
-         [ 0,-1, 0, 0, 0, 0, 0, 0, 0, 0],
+         [ 0, 2, 0, 0, 0, 0, 0, 0, 2, 0],
+         [ 0,-1, 0, 0, 2, 0, 0, 0, 0, 0],
          [ 0, 0, 0,-1, 0,-1, 0, 0,-1,-1],
-         [-1,-1, 0,-1, 0,-1, 0, 0, 0, 0],
+         [-1,-1, 0,-1, 0,-1, 0, 0, 0, 2],
          [ 0, 0, 0, 0, 0, 0, 0, 0,-1, 0],
-         [ 0, 0,-1,-1, 0,-1, 0, 0, 0, 0],
-         [ 0, 0, 0,-1, 0,-1,-1, 0,-1,-1],
+         [ 0, 0,-1,-1, 2,-1, 0, 0, 0, 0],
+         [ 0, 0, 2,-1, 0,-1,-1, 0,-1,-1],
          [ 0,-1, 0,-1, 0,-1, 0, 0, 0, 0],
-         [ 0, 0, 0, 0, 0, 0, 0,-1,-1, 0],
-         [ 0,-1, 0, 0, 1, 0, 0, 0, 0, 0],
+         [ 0, 0, 0, 0, 0, 0, 2,-1,-1, 0],
+         [ 0,-1, 0, 0, 0, 0, 0, 0, 0, 0],
          ], dtype=int))
         
         
+        self.origin_enemy_list = np.array([
+            (1,0),(8,0),(4,1),(3,9),(5,4),(6,2),(8,6)
+        ], dtype=int)
+        self.enemy_list= self.origin_enemy_list.copy()
         
-        self.max_HP = 5
+        self.max_HP = 6
         self.curr_HP = self.max_HP
-        self.max_enemy_num = 5
+        self.max_enemy_num = 7
         self.curr_nemy_num = self.max_enemy_num
-        self.agent_pos ,self.enemy_list  = self.pos_reset()
+        self.agent_pos = self.pos_reset()
         self.curr_map = self.origin_map.copy()
         self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 1
-        for pos in  self.enemy_list:
-            self.curr_map[pos[0],pos[1]] = 2
+        
 
         self.observation_space = spaces.Dict(
             {
                 "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
                 "agent": spaces.Box(0, size - 1, shape=(2,), dtype=int),
                 "hp/cur_enemy":spaces.Box(0, 20, shape=(2,), dtype=int),
-                "target": spaces.Box(-1, size - 1, shape=(5,2), dtype=int),
+                "target": spaces.Box(-1, size - 1, shape=(7,2), dtype=int),
 
             }
         )
 
 
 
-        self.action_space = spaces.Discrete(4)
+        self.action_space = spaces.Discrete(5)
     
     def pos_reset(self):
         start_pos=(0,0)
         while True:
             new_point = (random.randint(0, 9), random.randint(0, 9))
-            if self.origin_map[new_point[0],new_point[1]] != -1 :
+            if self.origin_map[new_point[0],new_point[1]] == 0  :
                 start_pos = new_point
                 break
-        enemy_lsit =[]
-        while len(enemy_lsit) < self.max_enemy_num:
-            new_point = (random.randint(0, 9), random.randint(0, 9))
-            if  self.origin_map[new_point[0],new_point[1]] != -1  and new_point != start_pos:
-                enemy_lsit.append(new_point)
             
-        return start_pos,enemy_lsit
+        return start_pos
     
     def _get_obs(self):
         
@@ -83,13 +81,13 @@ class BattleModuleMagicTowerEnv(gym.Env):
                  "state":state
                 }
     def reset(self,seed=None, options=None):
-           self.curr_HP = self.max_HP          
-           self.agent_pos ,self.enemy_list  = self.pos_reset()
-           self.curr_map = self.origin_map.copy()
+           
+           self.enemy_list= self.origin_enemy_list.copy()
+           self.curr_map = self.origin_map.copy()          
+           self.agent_pos = self.pos_reset()
            self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 1
-           for pos in  self.enemy_list:
-               self.curr_map[pos[0],pos[1]] = 2
            self.curr_nemy_num = self.max_enemy_num
+           self.curr_HP = self.max_HP
            
 
            return self._get_obs() , self._get_info(False)
@@ -101,27 +99,32 @@ class BattleModuleMagicTowerEnv(gym.Env):
           terminated = False
           truncated =False
           ifdone =False
-          
-          
-          if(action == 0):#up
+          if(action == 4):#quit
+                if self.curr_HP >1:
+                      reward -= self.curr_HP*500
+                else:
+                   reward += 100
+                terminated = True
+          else:
+            if(action == 0):#up
               next_y-=1
-          elif(action == 1):#down
+            elif(action == 1):#down
               next_y+=1
-          elif(action == 2):#right
+            elif(action == 2):#right
               next_x+=1
-          elif(action == 3):#left
+            elif(action == 3):#left
               next_x-=1
           
           
-          if(next_x < 0 or next_x >=7 or next_y < 0 or next_y >=7):
+            if(next_x < 0 or next_x >=10 or next_y < 0 or next_y >=10):
               reward -=1
-          else:
+            else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
-                  reward -=1
+                  reward -=10
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=0.1 
+                  reward -=1
                   self._update_agent_position(next_x,next_y)
             
               #enemy
@@ -129,38 +132,32 @@ class BattleModuleMagicTowerEnv(gym.Env):
                     ifdone = True
 
                     if random.random() < 0.4:  # 40% chance of winning
-                        reward +=200
+                        reward +=500
                     else:  #
-                        reward += 100
+                        reward += 400
                         self.curr_HP -= 1
                     
                     self.curr_nemy_num-=1
 
                     if self.curr_HP <= 0:
-                        reward -= 500
+                        reward -= 1000
                         terminated = True
 
-                    if self.curr_nemy_num == 0:
-                        reward +=500
+                    elif self.curr_nemy_num == 0:
+                        reward +=1000
                         terminated = True
                     
                     self._update_agent_position(next_x,next_y)
 
                     self.enemy_list = [(-1, -1) if (e[0] == next_x and e[1] == next_y) else e for e in self.enemy_list]
-            #exit
-              if(self.curr_map[next_x,next_y] == 3):
-                if self.curr_HP >1:
-                      reward -= self.curr_HP*100
-                else:
-                   reward += 1000
-                terminated = True
+            
           
-          observation = self._get_obs()
-          info = self._get_info(ifdone)
+            
 
           
           
-          
+          observation = self._get_obs()
+          info = self._get_info(ifdone)
           return observation, reward, terminated, truncated, info
     def _update_agent_position(self, next_x,next_y):
         self.curr_map[self.agent_pos[0], self.agent_pos[1]] = 0

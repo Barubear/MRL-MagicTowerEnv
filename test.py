@@ -73,5 +73,11 @@ obs ={
                 "map":np.array(curr_map,  dtype=int),
                 "target": np.array(enemy_list,  dtype=int),
 }
-print(obs in observation_space)
 
+startPos_index=0
+startPos=[(0,5),(5,5),(5,0)]
+for i in range(10):
+     
+        agent_pos = startPos[ startPos_index % len(startPos)]
+        startPos_index+=1
+        print(agent_pos)
