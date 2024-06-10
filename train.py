@@ -22,14 +22,19 @@ class SaceBaseCallback(BaseCallback):
         self.best = -float('inf')
         self.save_path = save_path
         self.log_path = log_path
-    
+        self.best_step = 0
     def _on_step(self) -> bool:
+        
         if self.n_calls%1000 != 0:
+            
             return True
         x , y = ts2xy(load_results(self.log_path),'timesteps')
         mean_reward = sum(y[-100:])/len(y[-100:])
+        print(self.best_step)
         if mean_reward >self.best:
             self.best = mean_reward
+            self.best_step = self.n_calls
+            print(self.n_calls,self.best)
             self.model.save(self.save_path)
         
         return True

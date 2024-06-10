@@ -76,8 +76,9 @@ obs ={
 
 startPos_index=0
 startPos=[(0,5),(5,5),(5,0)]
-for i in range(10):
-     
-        agent_pos = startPos[ startPos_index % len(startPos)]
-        startPos_index+=1
-        print(agent_pos)
+
+
+have_key = True
+keyobs = np.array(have_key, dtype=int)
+print(keyobs.shape)
+print(keyobs)

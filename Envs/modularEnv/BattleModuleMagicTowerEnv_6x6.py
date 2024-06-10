@@ -118,14 +118,14 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
           
           
             if(next_x < 0 or next_x >=self.size or next_y < 0 or next_y >=self.size):
-              reward -=10
+              reward -=1
             else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
-                  reward -=10
+                  reward -=1
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=1
+                  reward -=0.3
                   self._update_agent_position(next_x,next_y)
             
               #enemy
@@ -133,19 +133,19 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
                     ifdone = True
 
                     if random.random() < 0.5:  # 40% chance of winning
-                        reward +=500
+                        reward +=5
                     else:  #
-                        reward += 400
+                        reward += 4
                         self.curr_HP -= 1
                     
                     self.curr_nemy_num-=1
 
                     if self.curr_HP <= 0:
-                        reward -= 1000
+                        reward -= 10
                         terminated = True
 
                     elif self.curr_nemy_num == 0:
-                        reward +=1000
+                        reward +=10
                         terminated = True
                     
                     self._update_agent_position(next_x,next_y)
@@ -155,9 +155,9 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
               if(self.curr_map[next_x,next_y] == 3):
                   
                 if self.curr_HP == 1:
-                      reward+=1000 
+                      reward+=10
                 else:
-                      reward-=1000 
+                      reward-=10
 
                 ifdone = True
                 terminated = True
