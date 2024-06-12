@@ -16,10 +16,10 @@ import render_test
 import train
 
 def BattleModuletrain():
-    save_path = 'modules/KeyModule/Key_best_mode'
+    save_path = 'modules/BattleModule/Battle_minusReward_for_lose'
     log_path = 'logs/KeyModuleLog'
 
-    env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir= log_path)
+    env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
 
 
     model = RecurrentPPO(
@@ -41,7 +41,7 @@ def BattleModuletrain():
     print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     
-    render_test.test(model,env,50,1) 
+    render_test.test(model,env,50,10) 
 BattleModuletrain()
 
 
