@@ -132,10 +132,10 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
               if(self.curr_map[next_x,next_y] == 2):
                     ifdone = True
 
-                    if random.random() < 0.5:  # 40% chance of winning
+                    if random.random() < 0.5:  # 50% chance of winning
                         reward +=5
                     else:  #
-                        reward -= 3
+                        reward -= 2
                         self.curr_HP -= 1
                     
                     self.curr_nemy_num-=1

@@ -17,9 +17,9 @@ import train
 
 def BattleModuletrain():
     save_path = 'modules/BattleModule/Battle_minusReward_for_lose'
-    log_path = 'logs/KeyModuleLog'
+    log_path = 'logs/Battle_minusReward_Log'
 
-    env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
+    env = make_vec_env("BattleModuleMagicTowerEnv_6x6")#,monitor_dir=log_path
 
 
     model = RecurrentPPO(
@@ -29,7 +29,7 @@ def BattleModuletrain():
     gamma=0.995,  # 折扣因子
     gae_lambda=0.95,  # GAE λ
     clip_range=0.2,  # 剪辑范围
-    ent_coef=0.05,  # 熵系数
+    ent_coef=0.1,  # 熵系数
     batch_size=512,  # 批大小
     n_steps=256,  # 步数
     n_epochs=16,  # 训练次数
@@ -38,10 +38,10 @@ def BattleModuletrain():
 )
 
    
-    print(train.train(model,env,2000000,save_path,log_path,10))
+    #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     
-    render_test.test(model,env,50,10) 
+    render_test.test(model,env,50,1) 
 BattleModuletrain()
 
 
