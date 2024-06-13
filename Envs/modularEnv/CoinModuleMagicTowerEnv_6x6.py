@@ -124,25 +124,18 @@ class CoinModuleMagicTowerEnv_6x6(gym.Env):
                   self._update_agent_position(next_x,next_y)
             
               #coin
-              if(self.curr_map[next_x,next_y] == 4):
-                    ifdone = True
-
-                    
-                    reward +=5
-                    
-                    
-                    self._update_agent_position(next_x,next_y)
-                    self.curr_coin_num-=1
-                    self.coin_list = [(-1, -1) if (e[0] == next_x and e[1] == next_y) else e for e in self.coin_list]
-                    ifdone = True
-                    if self.curr_coin_num == 0:
-                        reward+=10
-                        
-                        terminated = True
-              
+              if(self.curr_map[next_x,next_y] == 4):  
+                reward +=5 
+                self._update_agent_position(next_x,next_y)
+                self.curr_coin_num-=1
+                self.coin_list = [(-1, -1) if (e[0] == next_x and e[1] == next_y) else e for e in self.coin_list]
+                if self.curr_coin_num == 0:
+                    reward+=10
+                    terminated = True
+              #exit
               if(self.curr_map[next_x,next_y] == 3):
                   
-                  reward-=10
+                reward-=10
 
                 
               
@@ -152,7 +145,7 @@ class CoinModuleMagicTowerEnv_6x6(gym.Env):
           
           
           observation = self._get_obs()
-          info = self._get_info(ifdone)
+          info = self._get_info()
           return observation, reward, terminated, False, info
     def _update_agent_position(self, next_x,next_y):
         self.curr_map[self.agent_pos[0], self.agent_pos[1]] = 0

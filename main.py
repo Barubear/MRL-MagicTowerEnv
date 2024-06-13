@@ -3,6 +3,7 @@ import gymnasium as gym
 from Envs.modularEnv.BattleModuleMagicTowerEnv_6x6 import BattleModuleMagicTowerEnv_6x6
 from Envs.modularEnv.CoinModuleMagicTowerEnv_6x6 import CoinModuleMagicTowerEnv_6x6
 from Envs.modularEnv.KeyModuleMagicTowerEnv_6x6 import KeyModuleMagicTowerEnv_6x6
+from Envs.modularEnv.ModuleMagicTowerEnv_6x6 import ModuleMagicTowerEnv_6x6
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C,PPO
@@ -16,10 +17,10 @@ import render_test
 import train
 
 def BattleModuletrain():
-    save_path = 'modules/BattleModule/Battle_minusReward_for_lose'
-    log_path = 'logs/Battle_minusReward_Log'
+    save_path = 'modules/controller/controller_best'
+    log_path = 'logs/controller_Log'
 
-    env = make_vec_env("BattleModuleMagicTowerEnv_6x6")#,monitor_dir=log_path
+    env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=log_path)#,monitor_dir=log_path
 
 
     model = RecurrentPPO(
@@ -38,10 +39,11 @@ def BattleModuletrain():
 )
 
    
-    #print(train.train(model,env,2000000,save_path,log_path,10))
+    print(train.train(model,env,3000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     
     render_test.test(model,env,50,1) 
+    
 BattleModuletrain()
 
 

@@ -17,17 +17,20 @@ class modulars:
         pass
 
 
-    def get_state_value(self,env):
-        obs = self.get_obs()
-        action, _states = self.model.predict(obs)
+    def get_state_value(self,obs):
+        
+        action, _states = self.module.predict(obs)
         obs_tensor_dict = {key: torch.as_tensor(obs, device=self.device) for (key, obs) in obs.items()}
-
 
         _states_tensor = torch.tensor(_states,dtype=torch.float32).to(self.device)
         episode_starts = torch.tensor([True] ,dtype=torch.float32).to(self.device)
-        state_value = self.model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
 
-        return action,state_value 
+
+
+        
+        state_value = self.module.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
+        
+        return action,state_value.item() 
 
     @abstractmethod
     def state_updata(self,x_pos= 0,y_pos = 0):
@@ -50,9 +53,9 @@ class BattleModular(modulars):
         
     def get_obs(self):
         return {
-                "map":np.array(self.env.curr_map, dtype=int),
-                "agent": np.array(self.env.agent_pos, dtype=int),
-                "hp/cur_enemy":np.array((self.curr_HP,self.curr_nemy_num), dtype=int),
+                "map":np.array(self.main_env.curr_map, dtype=int),
+                "agent": np.array(self.main_env.agent_pos, dtype=int),
+                "hp/cur_enemy":np.array((self.main_env.curr_HP,self.main_env.curr_nemy_num), dtype=int),
                 "target": np.array(self.enemy_list, dtype=int),
         }
     
@@ -66,7 +69,7 @@ class BattleModular(modulars):
 
 class CoinModular(modulars):
     def __init__(self,path,env) :
-        super.__init__(path,env)
+        super().__init__(path,env)
         self.origin_coin_list = np.array([
             (4,0),(5,2),(3,5),(5,5)
         ], dtype=int)
@@ -76,8 +79,8 @@ class CoinModular(modulars):
 
     def get_obs(self):
             return {
-                "map":np.array(self.env.curr_map, dtype=int),
-                "agent": np.array(self.env.agent_pos, dtype=int),
+                "map":np.array(self.main_env.curr_map, dtype=int),
+                "agent": np.array(self.main_env.agent_pos, dtype=int),
                 "target": np.array(self.coin_list, dtype=int),
             }
     
@@ -91,7 +94,7 @@ class CoinModular(modulars):
 
 class KeyModular(modulars):
     def __init__(self,path,env) :
-        super.__init__(path,env)
+        super().__init__(path,env)
         self.key_pos  = (0,2)
         
         

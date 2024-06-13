@@ -28,7 +28,7 @@ def test(model,env,max_step = 100,print_log_step = 1,ifprint = True):
 
         device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
 
-# 将obs字典中的每个值转换为PyTorch张量，并放入新的字典中
+        # 将obs字典中的每个值转换为PyTorch张量，并放入新的字典中
         obs_tensor_dict = {key: torch.as_tensor(obs, device=device) for (key, obs) in obs.items()}
 
 
@@ -42,9 +42,9 @@ def test(model,env,max_step = 100,print_log_step = 1,ifprint = True):
         
 
         if ifprint and step % print_log_step == 0:
-            print(info,action)
-            print(state_value)
-            print(obs['map'])
+            #print(info,action)
+            print(state_value.item())
+            #print(obs['map'])
             
 
         if dones or step ==max_step:
