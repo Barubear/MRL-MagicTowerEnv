@@ -79,6 +79,7 @@ startPos=[(0,5),(5,5),(5,0)]
 
 
 have_key = True
-keyobs = np.array(have_key, dtype=int)
+modular_action_list =[(0,0),(0,0),(0,0)]
+keyobs = np.array(modular_action_list, dtype=int)
 print(keyobs.shape)
 print(keyobs)

@@ -40,12 +40,13 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
 
         key_modular = KeyModular('trained_modules\KeyModule\Key_best_mode',self)
 
+        self.curr_modular_index = 2 # defaule == key_modular
         self.modular_action_list =[(0,0),(0,0),(0,0)]
         self.modualr_list =[battble_modular,coin_modular,key_modular]
         self.observation_space = spaces.Dict(
             {
                 "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
-                "module_list": spaces.Box(0, 50, shape=(1,3), dtype=float),
+                "module_list": spaces.Box(0, 50, shape=(3,2), dtype=float),
                 "curr_module":spaces.Box(0, 5, shape=(2,), dtype=int),
             
             }
@@ -57,9 +58,9 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
     def _get_obs(self):
         return{
 
-                "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
-                "module_list": spaces.Box(0, 50, shape=(1,3), dtype=float),
-                "curr_module":spaces.Box(0, 5, shape=(2,), dtype=int),
+                "map":np.array(self.curr_map, dtype=int),
+                "module_list": np.array(self.modular_action_list, dtype=int),
+                "curr_module":np.array(self.modular_action_list[self.curr_modular_index], dtype=int),
 
         }
         pass
