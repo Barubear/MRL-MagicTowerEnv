@@ -51,8 +51,8 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         self.observation_space = spaces.Dict(
             {
                 "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
-                "module_list": spaces.Box(0, 50, shape=(len(self.modular_predict_list),2), dtype=float),
-                "curr_module":spaces.Box(0, 5, shape=(2,), dtype=float),
+                "module_list": spaces.Box(-50, 50, shape=(len(self.modular_predict_list),2), dtype=float),
+                "curr_module":spaces.Box(-50, 50, shape=(2,), dtype=float),
             
             }
         )
@@ -97,7 +97,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
     
     def step(self, action):
         self.curr_modular_index =action
-        modular_action = self.modular_action_list[action]
+        modular_action = self.modular_action_list[self.curr_modular_index]
         next_x= self.agent_pos[0]
         next_y =self.agent_pos[1]
         reward = 0
@@ -170,7 +170,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         
         for i in range(len(self.modualr_list)) :
             modular = self.modualr_list[i]
-            new_action, state_value =modular.get_state_value(modular.get_obs())
+            new_action, state_value =modular.get_state_value()
             self.modular_predict_list[i] = (new_action, state_value)
             self.modular_action_list[i] =new_action
         
@@ -178,7 +178,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
 
         observation = self._get_obs()
         info = self._get_info()
-        return observation, reward, terminated, False, info
+        return observation, reward, terminated, truncated, info
         
 
 

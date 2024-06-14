@@ -17,8 +17,8 @@ import render_test
 import train
 
 def BattleModuletrain():
-    save_path = 'modules/controller/controller_best'
-    log_path = 'logs/controller_Log'
+    save_path = 'modules/Controller/controller_best'
+    log_path = 'logs/Controller_Log'
 
     env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=log_path)#,monitor_dir=log_path
 
@@ -38,7 +38,7 @@ def BattleModuletrain():
     verbose=1,
 )
 
-   
+    
     print(train.train(model,env,3000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     

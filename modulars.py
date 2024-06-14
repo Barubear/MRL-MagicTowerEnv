@@ -5,10 +5,14 @@ import numpy as np
 import torch
 
 
-class modulars:
+class modulars(ABC):
 
     def __init__(self,path,env) :
-        self.module = RecurrentPPO.load(path)
+        custom_objects = {
+        "clip_range": 0.0,
+        "lr_schedule": 0.0,
+        }
+        self.module = RecurrentPPO.load(path,custom_objects=custom_objects)
         self.device = torch.device('cuda' )
         self.main_env =env
 
@@ -17,17 +21,15 @@ class modulars:
         pass
 
 
-    def get_state_value(self,obs):
-        
+    def get_state_value(self):
+        obs = self.get_obs()
         action, _states = self.module.predict(obs)
-        obs_tensor_dict = {key: torch.as_tensor(obs, device=self.device) for (key, obs) in obs.items()}
+        _states = np.array(_states)
+        obs_tensor_dict = self.module.policy.obs_to_tensor(obs)[0]
+        
 
         _states_tensor = torch.tensor(_states,dtype=torch.float32).to(self.device)
         episode_starts = torch.tensor([True] ,dtype=torch.float32).to(self.device)
-
-
-
-        
         state_value = self.module.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
         
         return action,state_value.item() 
@@ -44,6 +46,7 @@ class modulars:
 class BattleModular(modulars):
     def __init__(self,path,env):
         super().__init__(path,env)
+        
         
         self.origin_enemy_list = np.array([
                 (0,3),(2,1),(2,3),
@@ -102,8 +105,8 @@ class KeyModular(modulars):
 
     def get_obs(self):
             return {
-                "map":np.array(self.env.curr_map, dtype=int),
-                "agent": np.array(self.env.agent_pos, dtype=int),
+                "map":np.array(self.main_env.curr_map, dtype=int),
+                "agent": np.array(self.main_env.agent_pos, dtype=int),
                 "target": np.array(self.key_pos, dtype=int),
             }
     
