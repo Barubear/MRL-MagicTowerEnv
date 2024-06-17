@@ -133,9 +133,9 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
                     ifdone = True
 
                     if random.random() < 0.5:  # 50% chance of winning
-                        reward +=5
+                        reward +=15
                     else:  #
-                        reward -= 2
+                        reward -= 6
                         self.curr_HP -= 1
                     
                     self.curr_nemy_num-=1
@@ -145,7 +145,7 @@ class BattleModuleMagicTowerEnv_6x6(gym.Env):
                         terminated = True
 
                     elif self.curr_nemy_num == 0:
-                        reward +=10
+                        reward +=20
                         terminated = True
                     
                     self._update_agent_position(next_x,next_y)

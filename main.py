@@ -12,15 +12,15 @@ from stable_baselines3.common.results_plotter import load_results,ts2xy
 import sb3_contrib
 from sb3_contrib import RecurrentPPO
 import torch
-
+import numpy as np
 import render_test
 import train
 
 def BattleModuletrain():
-    save_path = 'modules/Controller/controller_best'
-    log_path = 'logs/Controller_Log'
+    save_path = 'trained_modules/KeyModule/KeyModule_best'
+    log_path = 'logs/Keyn_Log'
 
-    env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=log_path)#,monitor_dir=log_path
+    env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir=log_path)#,monitor_dir=log_path
 
 
     model = RecurrentPPO(
@@ -39,10 +39,14 @@ def BattleModuletrain():
 )
 
     
-    print(train.train(model,env,3000000,save_path,log_path,10))
+    print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     
-    render_test.test(model,env,50,1) 
+    state_value_list,step_list = render_test.test(model,env,50,50,1) 
+    print(np.mean(state_value_list))
+    print(np.max(state_value_list))
+    print(np.min(state_value_list))
+    print(np.mean(step_list))
     
 BattleModuletrain()
 

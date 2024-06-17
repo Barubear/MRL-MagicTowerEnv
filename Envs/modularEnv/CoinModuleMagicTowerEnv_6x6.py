@@ -71,7 +71,7 @@ class CoinModuleMagicTowerEnv_6x6(gym.Env):
                 "target": np.array(self.coin_list, dtype=int),
             }
     
-    def _get_info(self,state):
+    def _get_info(self):
           return{"pos":self.agent_pos,
                  "coin num": self.curr_coin_num,
                 }
@@ -86,7 +86,7 @@ class CoinModuleMagicTowerEnv_6x6(gym.Env):
            
            
 
-           return self._get_obs() , self._get_info(False)
+           return self._get_obs() , self._get_info()
     
     def step(self, action):
           next_x= self.agent_pos[0]
@@ -125,7 +125,7 @@ class CoinModuleMagicTowerEnv_6x6(gym.Env):
             
               #coin
               if(self.curr_map[next_x,next_y] == 4):  
-                reward +=5 
+                reward +=10 
                 self._update_agent_position(next_x,next_y)
                 self.curr_coin_num-=1
                 self.coin_list = [(-1, -1) if (e[0] == next_x and e[1] == next_y) else e for e in self.coin_list]

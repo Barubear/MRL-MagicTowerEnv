@@ -123,7 +123,7 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
                     ifdone = True
                     self.have_key = True
                     
-                    reward +=10
+                    reward +=5
                     
                     self._update_agent_position(next_x,next_y)
 
