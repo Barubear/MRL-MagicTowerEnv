@@ -7,7 +7,7 @@ from Envs.modularEnv.ModuleMagicTowerEnv_6x6 import ModuleMagicTowerEnv_6x6
 from stable_baselines3.common.env_util import make_vec_env
 from sb3_contrib import RecurrentPPO
 import numpy as np
-import render_test
+import Data_processor
 import train
 
 def BattleModuletrain():
@@ -35,13 +35,8 @@ def BattleModuletrain():
     
     #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
-    
-    state_value_list,step_list = render_test.test(model,env,1,100,1) 
-    #print(np.mean(state_value_list))
-    #print(np.max(state_value_list))
-    #print(np.min(state_value_list))
-    #print(np.mean(step_list))
-    
+    Data_processor.Moudel_test(model,env,5,100,1,ifprint = False,save_path ='logs/test_Log/original_test.csv') 
+   
 BattleModuletrain()
 
 
