@@ -21,8 +21,9 @@ def next_step(model, obs,device):
 def test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = True):
     state_value_list =[]
     step_list =[]
-
-
+    hp_list =[]
+    enemy_list =[]
+    coin_list =[]
     for i in range(test_times):
         obs = env.reset()
         over =False
@@ -46,8 +47,9 @@ def test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = T
             state_value_list.append(state_value)
             obs, rewards, dones, info  = env.step(action)
         
-        
-        
+            hp_list.append(info['hp/enemy'][0])
+            enemy_list.append(info['hp/enemy'][1])
+            coin_list.append(info['coin'])
 
             if ifprint and step % print_log_step == 0:
                 print(info,action)
@@ -58,11 +60,14 @@ def test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = T
             if dones or step ==max_step:
                 print(step)
                 step_list.append(step)
+                hp_list.append(info['hp/enemy'][0])
+                enemy_list.append(info['hp/enemy'][1])
+                coin_list.append(info['coin'])
                 break
             step +=1
-    state_value_list = [value.detach().cpu().numpy() for value in state_value_list]
-
-    return np.array(state_value_list) ,np.array(step_list)
+    #state_value_list = [value.detach().cpu().numpy() for value in state_value_list]
+    #np.array(state_value_list) ,
+    return np.array(step_list),np.array(hp_list),np.array(enemy_list),np.array(coin_list)
 
 
 

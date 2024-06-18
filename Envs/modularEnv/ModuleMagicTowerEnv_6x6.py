@@ -33,7 +33,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         #mean 14.206184
         #max 20.708954
         #min 5.600292
-        self.battble_modular = BattleModular('modules\BattleModule\Battle_minusReward_for_lose',self)
+        self.battble_modular = BattleModular('trained_modules\BattleModule\BattleModule_best',self)
         self.max_enemy_num = len(self.battble_modular.origin_enemy_list)
         self.curr_nemy_num = self.max_enemy_num
         self.max_HP = self.max_enemy_num-1
@@ -43,7 +43,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         #mean -21.326082
         #max 46.42234
         #min -53.99151
-        self.coin_modular = CoinModular('trained_modules\CoinModule\Coin_best_mode',self)
+        self.coin_modular = CoinModular('trained_modules\CoinModule\CoinModule_best',self)
         self.max_coin_num = 4
         self.curr_coin_num = self.max_coin_num
 
@@ -51,7 +51,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         #mean 12.801807
         #max 14.39293
         #min 10.991759
-        self.key_modular = KeyModular('trained_modules\KeyModule\Key_best_mode',self)
+        self.key_modular = KeyModular('trained_modules\KeyModule\KeyModule_best',self)
         self.have_key = False
 
         self.curr_modular_index = 2 # defaule == key_modular
@@ -141,9 +141,9 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
             #enemy
             elif(self.curr_map[next_x,next_y] == 2):
                 if random.random() < 0.5:  # 50% chance of winning
-                    reward +=5
+                    reward +=15
                 else:  #
-                    reward -= 2
+                    reward -= 5
                     self.curr_HP -= 1
                 
                 self.curr_nemy_num-=1
