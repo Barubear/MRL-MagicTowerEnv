@@ -35,7 +35,7 @@ def BattleModuletrain():
     developer_controller = Developer_controller([10,-20, -3])
     #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
-    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv')
+    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
 BattleModuletrain()
 
 
