@@ -8,8 +8,8 @@ class Developer_controller:
         new_obs =obs.copy()
 
         for i in range(len(self.weights)):
-
-            new_obs['map'][i][1] += self.weights[i]
+            #print(new_obs['module_list'][0][i][1])
+            new_obs['module_list'][0][i][1] += self.weights[i]
 
 
 

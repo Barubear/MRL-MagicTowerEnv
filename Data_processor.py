@@ -1,13 +1,8 @@
 
 import torch
-import pygame
-import sys
-import  time
 import numpy as np
 import csv
-import pprint
-import Developer_controller
-
+import matplotlib.pyplot as plt
 
 def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = True,save_path = None,developer_controller =None):
     state_value_list =[]
@@ -23,7 +18,7 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
         
             if developer_controller != None:
                 obs = developer_controller.add_weight(obs)
-                
+
             action, _states = model.predict(obs)
 
             device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
@@ -67,4 +62,65 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
     
 
 
+def daw_graph(path1,path2):
+    step_lsit = []
+    hp_list = []
+    enemy_list= []
+    coin_list =[]
+    
+    with open(path1,'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            #step_lsit.append(row[0])
+            hp_list.append(row[1])
+            #enemy_list.append(row[2])
+            #coin_list.append(row[3])
+
+    hp_list2 = []
+    with open(path2,'r') as f2:
+        reader = csv.reader(f2)
+        next(reader)
+        for row in reader:
+            hp_list2.append(row[1])
+
+
+
+    hp_dic ={}
+    hp_dic2 ={}
+    for n in hp_list:
+        
+        if n in hp_dic:
+            hp_dic[n] +=1
+        else:
+            hp_dic[n] =1
+    for n in hp_list2:
+        
+        if n in hp_dic2:
+            hp_dic2[n] +=1
+        else:
+            hp_dic2[n] =1
+
+    keys = list(set(list(hp_dic.keys()) + list(hp_dic2.keys())))
+    keys.sort()
+    
+    values1 = [hp_dic.get(key, 0) for key in keys]
+    values2 = [hp_dic2.get(key, 0) for key in keys]
+    
+    bar_width = 0.3
+    r1 = range(len(keys))
+    r2 = [x + bar_width for x in r1]
+
+    plt.bar(r1, values1, color='r', width=bar_width, edgecolor='grey', label='Dataset 1')
+    plt.bar(r2, values2, color='b', width=bar_width, edgecolor='grey', label='Dataset 2')
+    
+    plt.xlabel('HP')
+    plt.ylabel('Count')
+    plt.title('HP Distribution')
+    plt.xticks([r + bar_width/2 for r in range(len(keys))], keys)
+    plt.legend()
+    plt.show()
+
+        
+    
 

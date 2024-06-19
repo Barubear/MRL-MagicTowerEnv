@@ -32,11 +32,17 @@ def BattleModuletrain():
     verbose=1,
 )
 
-    developer_controller = Developer_controller([10,-20, -3])
+    
     #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
-    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
-BattleModuletrain()
+    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv',developer_controller=developer_controller)
+#BattleModuletrain()
 
+env = make_vec_env("ModuleMagicTowerEnv_6x6")
+model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
+developer_controller = Developer_controller([15,-20, -3])
+Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv',developer_controller=developer_controller)
+Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
+Data_processor.daw_graph('logs/test_Log/org_test.csv','logs/test_Log/more_battle_test.csv')
 
 
