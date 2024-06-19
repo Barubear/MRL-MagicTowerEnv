@@ -35,7 +35,7 @@ def BattleModuletrain():
     
     #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
-    Data_processor.Moudel_test(model,env,5,100,1,ifprint = False,save_path ='logs/test_Log/original_test.csv') 
+    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/original_test.csv') 
    
 BattleModuletrain()
 
