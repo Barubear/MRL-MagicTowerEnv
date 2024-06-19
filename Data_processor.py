@@ -6,10 +6,10 @@ import  time
 import numpy as np
 import csv
 import pprint
+import Developer_controller
 
 
-
-def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = True,save_path = None):
+def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = True,save_path = None,developer_controller =None):
     state_value_list =[]
     log_list =[]
     
@@ -21,6 +21,9 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
 
         while True:
         
+            if developer_controller != None:
+                obs = developer_controller.add_weight(obs)
+                
             action, _states = model.predict(obs)
 
             device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
@@ -33,6 +36,7 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
             episode_starts = torch.tensor([True] ,dtype=torch.float32).to(device)
             state_value = model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
             state_value_list.append(state_value)
+
             obs, rewards, dones, info  = env.step(action)
             
             
@@ -40,7 +44,7 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
                 print(info,action)
                 print(state_value.item())
                 print(obs['map'])
-            
+                
 
             if dones or step == max_step:
                 print(step)
