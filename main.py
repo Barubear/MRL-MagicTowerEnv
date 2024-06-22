@@ -40,9 +40,16 @@ def BattleModuletrain():
 
 env = make_vec_env("ModuleMagicTowerEnv_6x6")
 model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
-developer_controller = Developer_controller([15,-20, -3])
-Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv',developer_controller=developer_controller)
-Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
-Data_processor.daw_graph('logs/test_Log/org_test.csv','logs/test_Log/more_battle_test.csv')
+#more_battle_developer_controller = Developer_controller([15,-30, -5])
+#more_coin_developer_controller = Developer_controller([-15,60, 0])
+#more_key_developer_controller = Developer_controller([-5,-10, 3])
+developer_controller = Developer_controller([-15,-30, 3])
+Data_processor.Moudel_test(model,env,10000,100,1,ifprint = False,save_path ='logs/test_Log/only_key_test.csv',developer_controller=developer_controller)
+#Data_processor.Moudel_test(model,env,10000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
+#Data_processor.daw_graph('logs/test_Log/org_test.csv','logs/test_Log/more_key_test.csv')
 
+mean_step,mean_enemy,mean_coin = Data_processor.print_data('logs/test_Log/org_test.csv','logs/test_Log/only_key_test.csv')
+print(mean_step)
+print(mean_enemy)
+print(mean_coin)
 

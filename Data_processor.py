@@ -42,7 +42,7 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
                 
 
             if dones or step == max_step:
-                print(step)
+                print(i,step)
                 
                 
                 log_list.append([step, info[0]["hp/enemy"][0], info[0]["hp/enemy"][1], info[0]["coin"]])
@@ -73,28 +73,33 @@ def daw_graph(path1,path2):
         next(reader)
         for row in reader:
             #step_lsit.append(row[0])
-            hp_list.append(row[1])
+            #hp_list.append(row[1])
             #enemy_list.append(row[2])
-            #coin_list.append(row[3])
+            coin_list.append(row[3])
 
+    step_lsit2 = []
     hp_list2 = []
+    enemy_list2= []
+    coin_list2 =[]
     with open(path2,'r') as f2:
         reader = csv.reader(f2)
         next(reader)
         for row in reader:
-            hp_list2.append(row[1])
+            coin_list2.append(row[2])
 
 
 
     hp_dic ={}
     hp_dic2 ={}
-    for n in hp_list:
+    for n in coin_list:
         
         if n in hp_dic:
             hp_dic[n] +=1
         else:
             hp_dic[n] =1
-    for n in hp_list2:
+
+
+    for n in coin_list2:
         
         if n in hp_dic2:
             hp_dic2[n] +=1
@@ -111,16 +116,52 @@ def daw_graph(path1,path2):
     r1 = range(len(keys))
     r2 = [x + bar_width for x in r1]
 
-    plt.bar(r1, values1, color='r', width=bar_width, edgecolor='grey', label='Dataset 1')
-    plt.bar(r2, values2, color='b', width=bar_width, edgecolor='grey', label='Dataset 2')
+    plt.bar(r1, values1, color='r', width=bar_width, edgecolor='grey', label='org')
+    plt.bar(r2, values2, color='b', width=bar_width, edgecolor='grey', label='battle')
     
-    plt.xlabel('HP')
+    plt.xlabel('Coin')
     plt.ylabel('Count')
-    plt.title('HP Distribution')
+    plt.title('Coin Distribution')
     plt.xticks([r + bar_width/2 for r in range(len(keys))], keys)
     plt.legend()
     plt.show()
 
-        
+def print_data(path1,path2):
+    step_lsit = []
+    hp_list = []
+    enemy_list= []
+    coin_list =[]
     
+    with open(path1,'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            step_lsit.append(row[0])
+            hp_list.append(row[1])
+            enemy_list.append(row[2])
+            coin_list.append(row[3])
 
+    step_lsit2 = []
+    hp_list2 =[]
+    enemy_list2= []
+    coin_list2 =[]
+    with open(path2,'r') as f2:
+        reader = csv.reader(f2)
+        next(reader)
+        for row in reader:
+            step_lsit2.append(row[0])
+            hp_list2.append(row[1])
+            enemy_list2.append(row[2])
+            coin_list2.append(row[2])
+    
+    step_lsit = np.array(step_lsit,dtype= int)
+    step_lsit2 = np.array(step_lsit2,dtype= int)
+    enemy_list = np.array(enemy_list,dtype= int)
+    enemy_list2 = np.array(enemy_list2,dtype= int)
+    coin_list = np.array(coin_list,dtype= int)
+    coin_list2 = np.array(coin_list2,dtype= int)
+    
+    mean_step = (np.mean(step_lsit),np.mean(step_lsit2))
+    mean_enemy = (np.mean(enemy_list),np.mean(enemy_list2))
+    mean_coin = (np.mean(coin_list),np.mean(coin_list2))
+    return  mean_step,mean_enemy,mean_coin
