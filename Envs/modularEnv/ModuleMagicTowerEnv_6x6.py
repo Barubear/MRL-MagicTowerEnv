@@ -88,6 +88,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         return{
             "hp/enemy":(self.curr_HP,self.curr_nemy_num),
             "coin":self.curr_coin_num,
+            "pos":self.agent_pos
 
 
         }

@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifprint = True,save_path = None,developer_controller =None):
     state_value_list =[]
     log_list =[]
-    
+    predict_values_logs ={}
     for i in range(test_times):
         obs = env.reset()
         over =False
-        step =0
+        step =1
+        
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         while True:
@@ -22,6 +23,8 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
             action, _states = model.predict(obs)
 
             device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
+
+            
 
         # 将obs字典中的每个值转换为PyTorch张量，并放入新的字典中
             obs_tensor_dict = {key: torch.as_tensor(obs, device=device) for (key, obs) in obs.items()}
@@ -34,7 +37,8 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
 
             obs, rewards, dones, info  = env.step(action)
             
-            
+            step +=1
+
             if ifprint and step % print_log_step == 0:
                 print(info,action)
                 print(state_value.item())
@@ -48,7 +52,7 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
                 log_list.append([step, info[0]["hp/enemy"][0], info[0]["hp/enemy"][1], info[0]["coin"]])
 
                 break
-            step +=1
+            
     #state_value_list = [value.detach().cpu().numpy() for value in state_value_list]
     #np.array(state_value_list) ,
     if save_path == None:
@@ -61,6 +65,42 @@ def Moudel_test(model,env,test_times = 10,max_step = 100,print_log_step = 1,ifpr
                 writer.writerow(msg)
     
 
+def Moudel_test_state_value_map(model,env,test_times,max_step,save_path):
+
+    log_list =[]
+    for i in range(test_times):
+        obs = env.reset()
+        over =False
+        step =1
+        info = None 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        while True:
+            if info == None:
+                log_list.append((1,5), obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1])
+            else:
+                log_list.append(info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1])
+            
+            
+
+        
+            action, _states = model.predict(obs)
+            device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
+            obs, rewards, dones, info  = env.step(action)
+            step +=1
+                
+            if dones or step == max_step:
+
+                break
+
+    with open(save_path, 'w',newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['pos','battle', 'coin', 'key'])
+            for msg in log_list:
+                writer.writerow(msg)        
+
+
+
 
 def daw_graph(path1,path2):
     step_lsit = []
@@ -72,9 +112,9 @@ def daw_graph(path1,path2):
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            #step_lsit.append(row[0])
-            #hp_list.append(row[1])
-            #enemy_list.append(row[2])
+            step_lsit.append(row[0])
+            hp_list.append(row[1])
+            enemy_list.append(row[2])
             coin_list.append(row[3])
 
     step_lsit2 = []
@@ -85,8 +125,10 @@ def daw_graph(path1,path2):
         reader = csv.reader(f2)
         next(reader)
         for row in reader:
+            hp_list2.append(row[1])
+            enemy_list2.append(row[2])
             coin_list2.append(row[2])
-
+            step_lsit2.append(row[0])
 
 
     hp_dic ={}
@@ -117,14 +159,18 @@ def daw_graph(path1,path2):
     r2 = [x + bar_width for x in r1]
 
     plt.bar(r1, values1, color='r', width=bar_width, edgecolor='grey', label='org')
-    plt.bar(r2, values2, color='b', width=bar_width, edgecolor='grey', label='battle')
+    plt.bar(r2, values2, color='b', width=bar_width, edgecolor='grey', label='more coin')
     
-    plt.xlabel('Coin')
+    plt.xlabel('coin')
     plt.ylabel('Count')
-    plt.title('Coin Distribution')
+    plt.title(' more coin coin Distribution')
     plt.xticks([r + bar_width/2 for r in range(len(keys))], keys)
     plt.legend()
     plt.show()
+
+
+
+
 
 def print_data(path1,path2):
     step_lsit = []
