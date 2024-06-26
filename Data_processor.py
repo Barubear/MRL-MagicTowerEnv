@@ -74,16 +74,16 @@ def Moudel_test_state_value_map(model,env,test_times,max_step,save_path):
         step =1
         info = None 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
+        print(i)
         while True:
             if info == None:
-                log_list.append((1,5), obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1])
+                log_list.append([(1,5), obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
             else:
-                log_list.append(info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1])
+                log_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
             
             
 
-        
+            
             action, _states = model.predict(obs)
             device = torch.device('cuda' )  # 根据情况选择CUDA或CPU设备
             obs, rewards, dones, info  = env.step(action)

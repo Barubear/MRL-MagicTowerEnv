@@ -53,5 +53,5 @@ developer_controller = Developer_controller([-15,-30, 3])
 #print(mean_enemy)
 #print(mean_coin)
 
-Data_processor.Moudel_test_state_value_map(model,env,10000,100,save_path = 'logs\state_value_test_log')
+Data_processor.Moudel_test_state_value_map(model,env,1000,100,save_path = 'logs/state_value_test_log/tate_value_test_log.csv')
 
