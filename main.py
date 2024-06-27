@@ -40,18 +40,28 @@ def BattleModuletrain():
 
 env = make_vec_env("ModuleMagicTowerEnv_6x6")
 model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
+
+
 #more_battle_developer_controller = Developer_controller([15,-30, -5])
 #more_coin_developer_controller = Developer_controller([-15,60, 0])
 #more_key_developer_controller = Developer_controller([-5,-10, 3])
-developer_controller = Developer_controller([-15,-30, 3])
-#Data_processor.Moudel_test(model,env,10000,100,1,ifprint = False,save_path ='logs/test_Log/only_key_test.csv',developer_controller=developer_controller)
-#Data_processor.Moudel_test(model,env,10000,100,1,ifprint = False,save_path ='logs/test_Log/org_test.csv')
-#Data_processor.daw_graph('logs/test_Log/org_test.csv','logs/test_Log/more_coin_test.csv')
+#developer_controller = Developer_controller([-15,-30, 3])
 
-#mean_step,mean_enemy,mean_coin = Data_processor.print_data('logs/test_Log/org_test.csv','logs/test_Log/only_key_test.csv')
-#print(mean_step)
-#print(mean_enemy)
-#print(mean_coin)
 
-Data_processor.Moudel_test_state_value_map(model,env,1000,100,save_path = 'logs/state_value_test_log/tate_value_test_log.csv')
+Data_processor.Moudel_test(model,env,1000,100,save_path ='logs/test_Log/org_test_Log/')
 
+
+
+
+
+
+
+
+#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','mean','battle state value map(mean)')
+#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','max','battle state value map(max)')
+#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','min','battle state value map(min)')
+
+
+#Data_processor.darw_track_map('logs/track_logs/org_track.csv','org track map')
+#Data_processor.darw_track_map('logs/track_logs/battle_track.csv','battle track map')
+#Data_processor.darw_track_map('logs/track_logs/noly_coin_track.csv','only key track map')
