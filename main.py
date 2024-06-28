@@ -7,10 +7,12 @@ from Envs.modularEnv.ModuleMagicTowerEnv_6x6 import ModuleMagicTowerEnv_6x6
 from stable_baselines3.common.env_util import make_vec_env
 from sb3_contrib import RecurrentPPO
 import numpy as np
-import Data_processor
+from Data_processor import Data_Processor 
 import train
 from Developer_controller import Developer_controller
-def BattleModuletrain():
+import os
+
+def Moduletrain():
     save_path = 'trained_modules/Controller/Controller_best'
     log_path = 'logs/Controller_Log'
 
@@ -36,19 +38,37 @@ def BattleModuletrain():
     #print(train.train(model,env,2000000,save_path,log_path,10))
     model = RecurrentPPO.load(save_path)
     Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv',developer_controller=developer_controller)
-#BattleModuletrain()
+
 
 env = make_vec_env("ModuleMagicTowerEnv_6x6")
 model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
 
 
-#more_battle_developer_controller = Developer_controller([15,-30, -5])
-#more_coin_developer_controller = Developer_controller([-15,60, 0])
-#more_key_developer_controller = Developer_controller([-5,-10, 3])
-#developer_controller = Developer_controller([-15,-30, 3])
+img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+
+more_battle_developer_controller_dic ={
+
+"01" : Developer_controller([20,0, 0]),
+"02" : Developer_controller([20,-40, -10]),
+"03" : Developer_controller([30, 0, 0]),
+"04" : Developer_controller([30,-40, -5]),
+"05" : Developer_controller([35,-50, -6]),
+"06" : Developer_controller([25,-50, -6]),
+"07" : Developer_controller([20,-50, -5]),
+"08" : Developer_controller([15,-30, -5]),
+"09" : Developer_controller([15,-50, -5]),
+"10" : Developer_controller([15, 0, 0]),
+"11" : Developer_controller([10,-30, -5]),
+"12" : Developer_controller([18,-30, -5]),
+"13" : Developer_controller([13,-30, -5]),
+"14" : Developer_controller([20,-30, -5]),
+
+"15" : Developer_controller([14,-30, -5]),
+"16" : Developer_controller([14,-40, -5]),
+"17" : Developer_controller([14,-20, -5]),
 
 
-Data_processor.Moudel_test(model,env,1000,100,save_path ='logs/test_Log/org_test_Log/')
+}
 
 
 
@@ -57,11 +77,23 @@ Data_processor.Moudel_test(model,env,1000,100,save_path ='logs/test_Log/org_test
 
 
 
-#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','mean','battle state value map(mean)')
-#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','max','battle state value map(max)')
-#Data_processor.darw_state_value_map('logs/state_value_test_log/tate_value_test_log.csv','battle','min','battle state value map(min)')
 
 
-#Data_processor.darw_track_map('logs/track_logs/org_track.csv','org track map')
-#Data_processor.darw_track_map('logs/track_logs/battle_track.csv','battle track map')
-#Data_processor.darw_track_map('logs/track_logs/noly_coin_track.csv','only key track map')
+
+def main():
+    env = make_vec_env("ModuleMagicTowerEnv_6x6")
+    model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
+    img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+    
+    dp = Data_Processor(env,model,'logs/test_log/','logs/test_Log/org_test_Log',img_save_path)
+    dp.developer_controller_test('MoreBattle',
+                                 more_battle_developer_controller_dic,
+                                 list(more_battle_developer_controller_dic.keys()),
+                                 only_draw = True,
+                                 save_only= True)
+
+
+
+
+
+main()
