@@ -14,10 +14,32 @@ class Data_Processor:
         self.log_save_path = log_save_path
         self.org_log_path = org_log_path
         self.img_save_path =img_save_path
+        self.infinity_large_int = 10**10
         
         pass
+            
+    def print_state_vale(self,path =None):
+        if path == None:
+            path = self.org_log_path+'/state_value_log.csv'
 
+        battle_list =[]
+        con_list =[]
+        key_list=[]
+        with open(path,'r') as f:
+            reader = csv.reader(f)
+            next(reader)
+            for row in reader:
+                battle_list.append(float(row[1]))
+                con_list.append(float(row[2]))
+                key_list.append(float(row[3]))
+        battle_list = np.array(battle_list)
+        con_list = np.array(con_list)
+        key_list = np.array(key_list)
 
+        print("battle:" +str((battle_list.max(),battle_list.mean(),battle_list.min()) ))
+        print("coin:" +str((con_list.max(),con_list.mean(),con_list.min() )))
+        print("key:" +str((key_list.max(),key_list.mean(),key_list.min() )))
+        
 
     def get_state_value(self,state,obs,device='cuda'):
 
@@ -71,8 +93,8 @@ class Data_Processor:
         self.write_log(state_value_path, state_value_list, ['pos','battle', 'coin', 'key'])
         self.write_log(track_path, track_list)
     
-    def write_log(self,path,data,tile_list=None):
-        with open(path, 'w',newline='') as f:
+    def write_log(self,path,data,tile_list=None,write_type ='w'):
+        with open(path, write_type,newline='') as f:
                 writer = csv.writer(f)
                 if tile_list != None:
                     writer.writerow(tile_list)
@@ -397,5 +419,143 @@ class Data_Processor:
             
             n +=1 
 
+    def read_data(self,path,datatype,max_value = 10**10,min_value =-1):
+        log_list = []
+        if path == None:
+            path = self.org_log_path
+        log_index = -1
+
+        if datatype == 'hp':
+            log_index = 1
+        elif datatype == 'enemy':
+            log_index = 2
+        elif datatype == 'coin':
+            log_index = 3
+        elif datatype == 'step':
+            log_index = 0
+        else:
+            print('No datatype named' + datatype)
+            return
+        
+
+
+        with open(path,'r') as f:
+            reader = csv.reader(f)
+            next(reader)
+            for row in reader:
+
+                value = int(row[log_index])
+                
+                if value < max_value and value > min_value:
+                    log_list.append(value)
+        
+        return log_list
+
+    def enemy_weighted_average(self,data):
+       
+        point_dic ={0:0,
+                    1:0,
+                    2:0,
+                    3:0,
+                    }
+        for i in data:
+            
+            point_dic[i] +=1
+        
+        point = ( point_dic[0] + point_dic[1]+ 0.5 * point_dic [2] + 0.2 * point_dic[3] ) / len(data)
+        return point
+
+    def coin_weighted_average(self,data):
+       
+        point_dic ={0:0,
+                    1:0,
+                    2:0,
+                    3:0,
+                    4:0,
+                    }
+        for i in data:
+            
+            point_dic[i] +=1
+        
+        point = ( point_dic[0] + 0.8*point_dic[1]+ 0.5 * point_dic [2] + 0.2 * point_dic[3] +  0.1 * point_dic[4]) / len(data)
+        return point
+    
+
+    def step_weighted_average(self,enemy_point,coin_point,data):
+        if len(data) == 0:
+            return 0
+        point_dic ={0:0,
+                    1:0,
+                    2:0,
+                    }
+        for i in data:
+            if i <=16 :
+                point_dic[0] +=1
+            elif i>16 and i <= 36:
+                point_dic[1] +=1
+            else :
+                point_dic[2] +=1
+        
+        step_point = ( point_dic[0] + 0.5*point_dic[1]+ 0.2 * point_dic [2] ) / len(data)
+
+        point = (step_point - 0.2*enemy_point - 0.2*coin_point)
+        return point
+
+    def get_score(self,moduar_name,dc_dic,dc_index_list):
+        score_list =[]
+        i= 0
+        for dc_keys in dc_index_list:
+            
+            log_path = self.log_save_path+moduar_name+'_test'+ dc_keys + '_Log'+ '/test_log.csv'
+            #hp_log_list = self.read_data(log_path,datatype,'hp')
+            enemy_log_list = self.read_data(log_path,'enemy')
+            enemt_score = self.enemy_weighted_average(enemy_log_list)
+            enemt_score = round(enemt_score, 3)
+            coin_log_list = self.read_data(log_path,'coin')
+            coin_score = self.coin_weighted_average(coin_log_list)
+            coin_score = round(coin_score, 3)
+            step_log_list = self.read_data(log_path,'step',max_value=100)
+            
+            key_score = self.step_weighted_average(enemt_score,coin_score,step_log_list)
+            key_score = round(key_score, 3)
+
+            num =''
+            dc = str(dc_dic[dc_keys].weights )
+
+            sorce_index = -1
+            if 'Battle' in moduar_name:
+                num= 'B'+dc_keys
+                sorce_index = 1
+            elif 'Coin'in moduar_name:
+                num= 'C'+dc_keys
+                sorce_index = 2
+            elif 'Key' in moduar_name:
+                num= 'K'+dc_keys
+                sorce_index = 3
+            score_list.append([num,enemt_score,coin_score,key_score,dc])
+
+        title = ['Experiment No.','enemy score','coin score','key score','dc']
+        file_path = 'Score/' + moduar_name+'/test_score_log.csv'
+        if not os.path.exists(file_path):
+            sorted_list = sorted(score_list, key=lambda x: x[sorce_index], reverse=True)
+            self.write_log(file_path,sorted_list,title ,write_type='w')
+        else:
+            self.write_log(file_path,score_list,write_type='a')
+
+    def get_score(self,filepath):
+        enemy_log_list = self.read_data(filepath,'enemy')
+        enemt_score = self.enemy_weighted_average(enemy_log_list)
+        enemt_score = round(enemt_score, 3)
+        coin_log_list = self.read_data(filepath,'coin')
+        coin_score = self.coin_weighted_average(coin_log_list)
+        coin_score = round(coin_score, 3)
+        step_log_list = self.read_data(filepath,'step',max_value=100)
+        
+        key_score = self.step_weighted_average(enemt_score,coin_score,step_log_list)
+        key_score = round(key_score, 3)
+
+        return (enemt_score,coin_score,key_score)
+        pass
+        
 
    

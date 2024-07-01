@@ -34,10 +34,6 @@ def Moduletrain():
     verbose=1,
 )
 
-    
-    #print(train.train(model,env,2000000,save_path,log_path,10))
-    model = RecurrentPPO.load(save_path)
-    Data_processor.Moudel_test(model,env,1000,100,1,ifprint = False,save_path ='logs/test_Log/more_battle_test.csv',developer_controller=developer_controller)
 
 
 env = make_vec_env("ModuleMagicTowerEnv_6x6")
@@ -63,17 +59,68 @@ more_battle_developer_controller_dic ={
 "13" : Developer_controller([13,-30, -5]),
 "14" : Developer_controller([20,-30, -5]),
 
-"15" : Developer_controller([14,-30, -5]),
-"16" : Developer_controller([14,-40, -5]),
-"17" : Developer_controller([14,-20, -5]),
+"15" : Developer_controller([15,-40, -5]),
+"16" : Developer_controller([15,-20, -5]),
 
+"17" : Developer_controller([-10,0, 0]),
+"18" : Developer_controller([-15, 0, 0]),
+"19" : Developer_controller([-20, 0, 0]),
+"20" : Developer_controller([-5, 0, 0]),
+
+"21" : Developer_controller([-30,0, 0]),
+"22" : Developer_controller([-40, 0, 0]),
+"23" : Developer_controller([-50, 0, 0]),
+"24" : Developer_controller([10, 0, 0]),
+"25" : Developer_controller([25, 0, 0]),
+
+"26" : Developer_controller([13, 0, 0]),
+"27" : Developer_controller([8, 0, 0]),
+}
+
+
+coin_developer_controller_dic ={
+    "01" : Developer_controller([-15,100, -5]),
+    "02" : Developer_controller([-15,-60, -5]),
+    "03" : Developer_controller([0,100, 0]),
+    "04" : Developer_controller([0,-60, 0]),
+
+
+    "05" : Developer_controller([0,120, 0]),
+    "06" : Developer_controller([0,90, 0]),
+    "07" : Developer_controller([0,-100, 0]),
+    "08" : Developer_controller([0,-120, 0]),
+
+    "09" : Developer_controller([0,80, 0]),
+    "10" : Developer_controller([0,60, 0]),
+    "11" : Developer_controller([0,45, 0]),
+    "12" : Developer_controller([0,30, 0]),
+
+    "13" : Developer_controller([0,50, 0]),
+    
+    "14" : Developer_controller([0,-50, 0]),
 
 }
 
 
+key_developer_controller_dic ={
+    "01" : Developer_controller([0,0, 5]),
+    "02" : Developer_controller([0,0, 10]),
+    "03" : Developer_controller([0,0, 15]),
 
+    
+    "04" : Developer_controller([0,0, -10]),
+    "05" : Developer_controller([0,0, -20]),
+    "06" : Developer_controller([0,0, -50]),
 
+    "07" : Developer_controller([0,0, 1]),
+    "08" : Developer_controller([0,0, 15]),
+    "09" : Developer_controller([0,0, 20]),
 
+    "10" : Developer_controller([0,0, -1]),
+    "11" : Developer_controller([0,0, -5]),
+    "12" : Developer_controller([0,0, 50]),
+    
+}
 
 
 
@@ -86,13 +133,35 @@ def main():
     img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
     
     dp = Data_Processor(env,model,'logs/test_log/','logs/test_Log/org_test_Log',img_save_path)
+    """
     dp.developer_controller_test('MoreBattle',
                                  more_battle_developer_controller_dic,
-                                 list(more_battle_developer_controller_dic.keys()),
-                                 only_draw = True,
-                                 save_only= True)
+                                 ["26","27",],
+                                 #only_draw = True,
+                                 save_only= True
+                                 )
+    """
+    
+    dp.developer_controller_test('MoreCoin',
+                                 coin_developer_controller_dic,
+                                ["14"],
+                                 #only_draw = True,
+                                 save_only= True
+                                 )
+    
+    
+    dp.developer_controller_test('MoreKey',
+                                key_developer_controller_dic,
+                                ["10","11","12",],
+                                #only_draw = True,
+                                save_only= True
+                                )
+    
 
+    #dp.print_state_vale()
 
+    dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
+    dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
 
 
 
