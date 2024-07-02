@@ -29,7 +29,7 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
         self.key_pos  = (0,2)
         self.have_key = False
         self.startPos_index=0
-        self.startPos=[(0,5),(5,5),(5,0)]
+        self.startPos=[(1,5),(2,0),(5,5),(5,0)]
         self.agent_pos = self.startPos[ self.startPos_index % len(self.startPos)]
         self.curr_map = self.origin_map.copy()
         self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 1
@@ -112,10 +112,10 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
             else:
               # wall:-1
               if(self.curr_map[next_x,next_y] == -1):
-                  reward -=1
+                  reward -=2
               # way
               if(self.curr_map[next_x,next_y] == 0):
-                  reward -=0.3
+                  reward -=1
                   self._update_agent_position(next_x,next_y)
             
               #key
@@ -123,7 +123,7 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
                     ifdone = True
                     self.have_key = True
                     
-                    reward +=5
+                    reward +=10
                     
                     self._update_agent_position(next_x,next_y)
 
@@ -132,12 +132,12 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
               if(self.curr_map[next_x,next_y] == 3):
                   
                 if self.have_key == True:
-                      reward+=10
+                      reward+=20
                       ifdone = True
                       terminated = True
                       self._update_agent_position(next_x,next_y)
                 else:
-                      reward-=10
+                      reward-=20
 
                 
               

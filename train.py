@@ -11,8 +11,19 @@ def train(model,env,total_timesteps, save_path,log_path,test_times):
     del model # remove to demonstrate saving and loading
     model = RecurrentPPO.load(save_path)
     trained_msg = evaluate_policy(model,env,n_eval_episodes=test_times)
-    return start_msg,trained_msg
-    #return 'test'
+    print(start_msg ,trained_msg)
+
+    print('model test:')
+    for i in range(test_times):
+        step = 0
+        while True:
+
+                action, _states = model.predict(obs)
+                obs, rewards, dones, info  = env.step(action)
+                step +=1
+                if dones or step == 100:
+                    print(step,info)
+                    break
 
 
 

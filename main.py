@@ -13,10 +13,10 @@ from Developer_controller import Developer_controller
 import os
 
 def Moduletrain():
-    save_path = 'trained_modules/Controller/Controller_best'
+    save_path = 'trained_modules/KeyModule/Key_best02'
     log_path = 'logs/Controller_Log'
 
-    env = make_vec_env("ModuleMagicTowerEnv_6x6")#,monitor_dir=log_path
+    env = make_vec_env("KeyModuleMagicTowerEnv_6x6")#,monitor_dir=log_path
 
 
     model = RecurrentPPO(
@@ -32,7 +32,8 @@ def Moduletrain():
     n_epochs=16,  # 训练次数
     policy_kwargs=dict(lstm_hidden_size=128, n_lstm_layers=1),  # LSTM 设置
     verbose=1,
-)
+    )
+    print(train.train(model,env,2000000,save_path,log_path,20))
 
 
 
@@ -75,6 +76,7 @@ more_battle_developer_controller_dic ={
 
 "26" : Developer_controller([13, 0, 0]),
 "27" : Developer_controller([8, 0, 0]),
+"28" : Developer_controller([5, 0, 0]),
 }
 
 
@@ -96,7 +98,7 @@ coin_developer_controller_dic ={
     "12" : Developer_controller([0,30, 0]),
 
     "13" : Developer_controller([0,50, 0]),
-    
+
     "14" : Developer_controller([0,-50, 0]),
 
 }
@@ -119,6 +121,16 @@ key_developer_controller_dic ={
     "10" : Developer_controller([0,0, -1]),
     "11" : Developer_controller([0,0, -5]),
     "12" : Developer_controller([0,0, 50]),
+
+    
+    "13" : Developer_controller([0,0, -70]),
+    "14" : Developer_controller([0,0, -30]),
+
+    "15" : Developer_controller([0,0, -90]),
+    "16" : Developer_controller([0,0, -110]),
+
+    "17" : Developer_controller([0,0, -60]),
+    "18" : Developer_controller([0,0, -40]),
     
 }
 
@@ -128,41 +140,55 @@ key_developer_controller_dic ={
 
 
 def main():
+    """"
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
     model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
     img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
     
     dp = Data_Processor(env,model,'logs/test_log/','logs/test_Log/org_test_Log',img_save_path)
-    """
+    
     dp.developer_controller_test('MoreBattle',
                                  more_battle_developer_controller_dic,
-                                 ["26","27",],
+                                 ['28'],
                                  #only_draw = True,
                                  save_only= True
                                  )
-    """
+    
     
     dp.developer_controller_test('MoreCoin',
                                  coin_developer_controller_dic,
-                                ["14"],
-                                 #only_draw = True,
+                                 list(coin_developer_controller_dic.keys()),
+                                 only_draw = True,
                                  save_only= True
                                  )
     
     
     dp.developer_controller_test('MoreKey',
                                 key_developer_controller_dic,
-                                ["10","11","12",],
+                                ['17','18'],
                                 #only_draw = True,
                                 save_only= True
                                 )
     
-
+    
     #dp.print_state_vale()
+    #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
+    #dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
+    #dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
 
-    dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
-    dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
+    #
+    #print(dp.get_one_score('logs/test_Log/org_test_Log/test_log.csv'))
+    dp.get_pearsonr('MoreBattle','enemy score','coin score')
+    dp.get_pearsonr('MoreBattle','enemy score','step_score')
+
+    dp.get_pearsonr('MoreCoin','coin score','enemy score')
+    dp.get_pearsonr('MoreCoin','coin score','step_score')
 
 
+    dp.get_pearsonr('MoreKey','step_score','coin score')
+    dp.get_pearsonr('MoreKey','step_score','enemy score')
 
+    """
+    #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
+    Moduletrain()
 main()

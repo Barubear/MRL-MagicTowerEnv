@@ -5,7 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import os
-
+from scipy.stats import pearsonr
 
 class Data_Processor:
     def __init__(self,env,model,log_save_path,org_log_path = None,img_save_path = None) :
@@ -180,11 +180,15 @@ class Data_Processor:
     
 
         values1 = [log_dic.get(key, 0) for key in keys]
+        
         values2 = [log_dic2.get(key, 0) for key in keys]
-    
+        
+
         bar_width = 0.3
-        r1 = range(len(keys))
+        r1 = list(range(len(keys)))
         r2 = [x + bar_width for x in r1]
+        
+
         if datatype == 'step':
             plt.figure(figsize=(15,4.8))
 
@@ -414,25 +418,30 @@ class Data_Processor:
             self.daw_graph('enemy','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' enemy count'+dc_index_list[n],xlable='enemy',img_save_path = img_directory_path_list[n],save_only =save_only)
             self.daw_graph('coin','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' coin count'+dc_index_list[n],xlable='coin',img_save_path = img_directory_path_list[n],save_only =save_only)
             self.daw_graph('step','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' step count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
+            self.daw_graph('hp','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' hp count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
             track_data_path = log+'/trac_log.csv'
             self.darw_track_map(track_data_path,moduar_name +'track map'+dc_index_list[n],img_save_path = img_directory_path_list[n],save_only =save_only)
             
             n +=1 
 
-    def read_data(self,path,datatype,max_value = 10**10,min_value =-1):
+    def read_data(self,path,datatype,max_value = 10**10,min_value =-1,list_data_type =int):
         log_list = []
         if path == None:
             path = self.org_log_path
         log_index = -1
 
-        if datatype == 'hp':
+        if datatype == 'hp' or datatype == 'enemy score':
             log_index = 1
-        elif datatype == 'enemy':
+        elif datatype == 'enemy' or datatype == 'coin score':
             log_index = 2
-        elif datatype == 'coin':
+        elif datatype == 'coin' or datatype == 'step_score': 
             log_index = 3
         elif datatype == 'step':
             log_index = 0
+        elif datatype == 'key score': 
+            log_index = 4
+        elif datatype == 'clear rate': 
+            log_index = 5
         else:
             print('No datatype named' + datatype)
             return
@@ -444,7 +453,7 @@ class Data_Processor:
             next(reader)
             for row in reader:
 
-                value = int(row[log_index])
+                value = list_data_type(row[log_index])
                 
                 if value < max_value and value > min_value:
                     log_list.append(value)
@@ -489,20 +498,32 @@ class Data_Processor:
                     2:0,
                     }
         for i in data:
-            if i <=16 :
+            if i >= 100:
+                continue
+
+            elif i <=16 :
                 point_dic[0] +=1
             elif i>16 and i <= 36:
                 point_dic[1] +=1
             else :
                 point_dic[2] +=1
+            
         
         step_point = ( point_dic[0] + 0.5*point_dic[1]+ 0.2 * point_dic [2] ) / len(data)
 
-        point = (step_point - 0.2*enemy_point - 0.2*coin_point)
-        return point
+        point = (step_point*3 - enemy_point - coin_point)/3
+        return point,step_point
+
+    def get_clear_rate(self,data):
+        clear_num = 0
+        for i in data:
+            if i <100:
+                clear_num += 1
+        return clear_num / len(data)
 
     def get_score(self,moduar_name,dc_dic,dc_index_list):
         score_list =[]
+        
         i= 0
         for dc_keys in dc_index_list:
             
@@ -514,11 +535,12 @@ class Data_Processor:
             coin_log_list = self.read_data(log_path,'coin')
             coin_score = self.coin_weighted_average(coin_log_list)
             coin_score = round(coin_score, 3)
-            step_log_list = self.read_data(log_path,'step',max_value=100)
+            step_log_list = self.read_data(log_path,'step')
             
-            key_score = self.step_weighted_average(enemt_score,coin_score,step_log_list)
+            key_score,step_score= self.step_weighted_average(enemt_score,coin_score,step_log_list)
             key_score = round(key_score, 3)
-
+            step_score = round(step_score, 3)
+            clear_rate = self.get_clear_rate(step_log_list)
             num =''
             dc = str(dc_dic[dc_keys].weights )
 
@@ -532,9 +554,10 @@ class Data_Processor:
             elif 'Key' in moduar_name:
                 num= 'K'+dc_keys
                 sorce_index = 3
-            score_list.append([num,enemt_score,coin_score,key_score,dc])
+            score_list.append([num,enemt_score,coin_score,step_score,key_score,clear_rate,dc])
 
-        title = ['Experiment No.','enemy score','coin score','key score','dc']
+        title = ['Experiment No.','enemy score','coin score','step_score','key score','clear_rate','dc']
+        
         file_path = 'Score/' + moduar_name+'/test_score_log.csv'
         if not os.path.exists(file_path):
             sorted_list = sorted(score_list, key=lambda x: x[sorce_index], reverse=True)
@@ -542,20 +565,38 @@ class Data_Processor:
         else:
             self.write_log(file_path,score_list,write_type='a')
 
-    def get_score(self,filepath):
+    def get_one_score(self,filepath):
         enemy_log_list = self.read_data(filepath,'enemy')
         enemt_score = self.enemy_weighted_average(enemy_log_list)
         enemt_score = round(enemt_score, 3)
         coin_log_list = self.read_data(filepath,'coin')
         coin_score = self.coin_weighted_average(coin_log_list)
         coin_score = round(coin_score, 3)
-        step_log_list = self.read_data(filepath,'step',max_value=100)
+        step_log_list = self.read_data(filepath,'step')
         
-        key_score = self.step_weighted_average(enemt_score,coin_score,step_log_list)
+        key_score,step_score = self.step_weighted_average(enemt_score,coin_score,step_log_list)
         key_score = round(key_score, 3)
-
-        return (enemt_score,coin_score,key_score)
+        key_score,step_score= self.step_weighted_average(enemt_score,coin_score,step_log_list)
+        key_score = round(key_score, 3)
+        step_score = round(step_score, 3)
+        clear_rate = self.get_clear_rate(step_log_list)
+        return (enemt_score,coin_score,step_score,key_score,clear_rate)
         pass
         
+    def get_pearsonr(self,moduar_name,datatype1,datatype2):
+        file_path = 'Score/' + moduar_name+'/test_score_log.csv'
+        log_list1 = self.read_data(file_path,datatype1,list_data_type =float)
+        log_list2 = self.read_data(file_path,datatype2,list_data_type =float)
+        corr, p_value =  pearsonr(log_list1,log_list2)
+        """
+        plt.scatter(log_list1, log_list1)
+        plt.title('Correlation of '+ datatype1+' with '+ datatype2+'in '+moduar_name)
+        plt.text(0.05, 0.95, f'ピアソン相関係数: {corr:.2f}\np値: {p_value:.2e}',
+         transform=plt.gca().transAxes, verticalalignment='top')
+        plt.xlabel(datatype1)
+        plt.ylabel(datatype2)
+        plt.show()
+        """
+        print( corr, p_value)
 
    
