@@ -149,8 +149,8 @@ def main():
     Ctrl_log_path = 'logs/Controller02_Log'
     img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
 
-    Moduletrain(Key_save_path,Key_log_path,Key_env)
-    #Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
+    #Moduletrain(Key_save_path,Key_log_path,Key_env)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
     """"
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
     model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
