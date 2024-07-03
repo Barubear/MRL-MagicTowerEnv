@@ -142,10 +142,10 @@ def main():
     Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
     Key_env = make_vec_env("KeyModuleMagicTowerEnv_6x6")
 
-    Key_save_path = 'trained_modules/KeyModule/Key_best02'
+    Key_save_path = 'trained_modules/KeyModule/Key_best03'
     Key_log_path = 'logs/Key03_Log'
 
-    Ctrl_save_path= 'trained_modules/Controller/Ctrl_best03'
+    Ctrl_save_path= 'trained_modules/Controller/Ctrl_best02'
     Ctrl_log_path = 'logs/Controller02_Log'
     img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
 
