@@ -51,7 +51,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         #mean 12.801807
         #max 14.39293
         #min 10.991759
-        self.key_modular = KeyModular('trained_modules\KeyModule\KeyModule_best',self)
+        self.key_modular = KeyModular('trained_modules\KeyModule\Key_best02',self)
         self.have_key = False
 
         self.curr_modular_index = 2 # defaule == key_modular

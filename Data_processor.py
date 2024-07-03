@@ -8,7 +8,7 @@ import os
 from scipy.stats import pearsonr
 
 class Data_Processor:
-    def __init__(self,env,model,log_save_path,org_log_path = None,img_save_path = None) :
+    def __init__(self,env,model,log_save_path = None,org_log_path = None,img_save_path = None) :
         self.env = env
         self.model = model
         self.log_save_path = log_save_path
@@ -50,7 +50,7 @@ class Data_Processor:
         _states_tensor = torch.tensor(state,dtype=torch.float32).to(device)
         episode_starts = torch.tensor([True] ,dtype=torch.float32).to(device)
         state_value = self.model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
-        return state_value
+        return state_value.to('cpu')
 
     def Moudel_test(self,test_times,max_step,folder,developer_controller =None):
         state_value_list =[]

@@ -6,17 +6,16 @@ from Envs.modularEnv.KeyModuleMagicTowerEnv_6x6 import KeyModuleMagicTowerEnv_6x
 from Envs.modularEnv.ModuleMagicTowerEnv_6x6 import ModuleMagicTowerEnv_6x6
 from stable_baselines3.common.env_util import make_vec_env
 from sb3_contrib import RecurrentPPO
-import numpy as np
 from Data_processor import Data_Processor 
 import train
 from Developer_controller import Developer_controller
-import os
 
-def Moduletrain():
-    save_path = 'trained_modules/KeyModule/Key_best02'
-    log_path = 'logs/Controller_Log'
 
-    env = make_vec_env("KeyModuleMagicTowerEnv_6x6")#,monitor_dir=log_path
+def Moduletrain(save_path,log_path,env):
+    save_path = 'trained_modules/KeyModule/Key_best03'
+    log_path = 'logs/Key03_Log'
+
+    env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir=log_path)#
 
 
     model = RecurrentPPO(
@@ -33,15 +32,12 @@ def Moduletrain():
     policy_kwargs=dict(lstm_hidden_size=128, n_lstm_layers=1),  # LSTM 设置
     verbose=1,
     )
-    print(train.train(model,env,2000000,save_path,log_path,20))
+    
+    train.train(model,env,1000000,save_path,log_path,100)
 
 
 
-env = make_vec_env("ModuleMagicTowerEnv_6x6")
-model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
 
-
-img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
 
 more_battle_developer_controller_dic ={
 
@@ -140,6 +136,20 @@ key_developer_controller_dic ={
 
 
 def main():
+
+    #Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6")
+    #Battle_env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
+    #Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
+    #Key_env = make_vec_env("KeyModuleMagicTowerEnv_6x6")
+
+    #Key_save_path = 'trained_modules/Controller/Ctrl_best02'
+    #Key_log_path = 'logs/Key03_Log'
+    #Ctrl_save_path= 'trained_modules/KeyModule/Key_best02'
+    #Ctrl_log_path = 'logs/Controller02_Log'
+    #img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+
+    #Moduletrain(Key_save_path,Key_log_path,Key_env)
+    #Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
     """"
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
     model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
@@ -190,5 +200,5 @@ def main():
 
     """
     #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
-    Moduletrain()
+    
 main()
