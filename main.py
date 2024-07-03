@@ -137,16 +137,16 @@ key_developer_controller_dic ={
 
 def main():
 
-    #Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6")
-    #Battle_env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
-    #Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
-    #Key_env = make_vec_env("KeyModuleMagicTowerEnv_6x6")
+    Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6")
+    Battle_env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
+    Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
+    Key_env = make_vec_env("KeyModuleMagicTowerEnv_6x6")
 
-    #Key_save_path = 'trained_modules/Controller/Ctrl_best02'
-    #Key_log_path = 'logs/Key03_Log'
-    #Ctrl_save_path= 'trained_modules/KeyModule/Key_best02'
-    #Ctrl_log_path = 'logs/Controller02_Log'
-    #img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+    Key_save_path = 'trained_modules/Controller/Ctrl_best02'
+    Key_log_path = 'logs/Key03_Log'
+    Ctrl_save_path= 'trained_modules/KeyModule/Key_best02'
+    Ctrl_log_path = 'logs/Controller02_Log'
+    img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
 
     #Moduletrain(Key_save_path,Key_log_path,Key_env)
     #Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
