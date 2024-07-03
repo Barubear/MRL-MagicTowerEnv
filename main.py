@@ -33,7 +33,7 @@ def Moduletrain(save_path,log_path,env):
     verbose=1,
     )
     
-    train.train(model,env,1000000,save_path,log_path,100)
+    train.train(model,env,3000000,save_path,log_path,100)
 
 
 
@@ -144,7 +144,7 @@ def main():
 
     Key_save_path = 'trained_modules/Controller/Ctrl_best02'
     Key_log_path = 'logs/Key03_Log'
-    Ctrl_save_path= 'trained_modules/KeyModule/Key_best02'
+    Ctrl_save_path= 'trained_modules/KeyModule/Key_best03'
     Ctrl_log_path = 'logs/Controller02_Log'
     img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
 
