@@ -12,8 +12,7 @@ from Developer_controller import Developer_controller
 
 
 def Moduletrain(save_path,log_path,env):
-    save_path = 'trained_modules/KeyModule/Key_best03'
-    log_path = 'logs/Key03_Log'
+    
 
     env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir=log_path)#
 
