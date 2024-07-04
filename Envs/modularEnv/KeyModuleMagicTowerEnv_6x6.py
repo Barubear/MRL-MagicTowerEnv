@@ -29,8 +29,8 @@ class KeyModuleMagicTowerEnv_6x6(gym.Env):
         self.key_pos  = (0,2)
         self.have_key = False
         self.startPos_index=0
-        self.startPos=[(1,5)]
-        #self.startPos=[(1,5),(2,0),(5,5),(5,0)]
+        #self.startPos=[(1,5)]
+        self.startPos=[(1,5),(2,0),(5,5),(5,0)]
         self.agent_pos = self.startPos[ self.startPos_index % len(self.startPos)]
         self.curr_map = self.origin_map.copy()
         self.curr_map[self.agent_pos[0],self.agent_pos[1]] = 1
