@@ -12,11 +12,6 @@ from Developer_controller import Developer_controller
 
 
 def Moduletrain(save_path,log_path,env):
-    
-
-    env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir=log_path)#
-
-
     model = RecurrentPPO(
     "MultiInputLstmPolicy",
     env,
@@ -131,35 +126,38 @@ key_developer_controller_dic ={
 
 
 
-
-
-
-def main():
-
-    Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6")
+def Battle_train():
     Battle_env = make_vec_env("BattleModuleMagicTowerEnv_6x6")
-    Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
-    Key_env = make_vec_env("KeyModuleMagicTowerEnv_6x6")
+    pass
 
+def Coin_train():
+    Coin_env = make_vec_env("CoinModuleMagicTowerEnv_6x6")
+    pass
+
+def Key_train():
     Key_save_path = 'trained_modules/KeyModule/Key_best03'
     Key_log_path = 'logs/Key03_Log'
+    pass
 
+def Ctrl_train():
     Ctrl_save_path= 'trained_modules/Controller/Ctrl_best02'
     Ctrl_log_path = 'logs/Controller02_Log'
-    img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+    Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
 
-    #Moduletrain(Key_save_path,Key_log_path,Key_env)
-    #Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
-    """"
+def def_DP():
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
-    model = RecurrentPPO.load('trained_modules/Controller/Controller_best')
-    img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
-    
-    dp = Data_Processor(env,model,'logs/test_log/','logs/test_Log/org_test_Log',img_save_path)
-    
+    model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02')
+    #img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+    img_save_path_round2 = 'D:/大学院/2024春/実装/実験記録/img02'
+    dp = Data_Processor(env,model,'logs/test_log_round2/','logs/test_Log/org_test_Log',img_save_path_round2)
+
+    return dp
+
+def get_score(dp):
     dp.developer_controller_test('MoreBattle',
                                  more_battle_developer_controller_dic,
-                                 ['28'],
+                                 list(more_battle_developer_controller_dic.keys()),
                                  #only_draw = True,
                                  save_only= True
                                  )
@@ -173,9 +171,8 @@ def main():
                                  )
     
     
-    dp.developer_controller_test('MoreKey',
-                                key_developer_controller_dic,
-                                ['17','18'],
+    dp.developer_controller_test('MoreKey',key_developer_controller_dic,
+                                list(key_developer_controller_dic.keys()),
                                 #only_draw = True,
                                 save_only= True
                                 )
@@ -188,17 +185,20 @@ def main():
 
     #
     #print(dp.get_one_score('logs/test_Log/org_test_Log/test_log.csv'))
-    dp.get_pearsonr('MoreBattle','enemy score','coin score')
-    dp.get_pearsonr('MoreBattle','enemy score','step_score')
+    #dp.get_pearsonr('MoreBattle','enemy score','coin score')
+    
 
-    dp.get_pearsonr('MoreCoin','coin score','enemy score')
-    dp.get_pearsonr('MoreCoin','coin score','step_score')
-
-
-    dp.get_pearsonr('MoreKey','step_score','coin score')
-    dp.get_pearsonr('MoreKey','step_score','enemy score')
-
-    """
+    
     #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
     
+
+def main():
+
+    
+    Ctrl_train()
+    
+
+    
+
+
 main()
