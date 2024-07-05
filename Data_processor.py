@@ -592,7 +592,7 @@ class Data_Processor:
         plt.scatter(log_list1, log_list1)
         plt.title('Correlation of '+ datatype1+' with '+ datatype2+'in '+moduar_name)
         plt.text(0.05, 0.95, f'ピアソン相関係数: {corr:.2f}\np値: {p_value:.2e}',
-         transform=plt.gca().transAxes, verticalalignment='top')
+        transform=plt.gca().transAxes, verticalalignment='top')
         plt.xlabel(datatype1)
         plt.ylabel(datatype2)
         plt.show()
