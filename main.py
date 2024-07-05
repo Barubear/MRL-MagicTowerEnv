@@ -4,6 +4,7 @@ from Envs.modularEnv.BattleModuleMagicTowerEnv_6x6 import BattleModuleMagicTower
 from Envs.modularEnv.CoinModuleMagicTowerEnv_6x6 import CoinModuleMagicTowerEnv_6x6
 from Envs.modularEnv.KeyModuleMagicTowerEnv_6x6 import KeyModuleMagicTowerEnv_6x6
 from Envs.modularEnv.ModuleMagicTowerEnv_6x6 import ModuleMagicTowerEnv_6x6
+from Envs.modularEnv.OldModuleMagicTowerEnv_6x6 import OldModuleMagicTowerEnv_6x6 
 from stable_baselines3.common.env_util import make_vec_env
 from sb3_contrib import RecurrentPPO
 from Data_processor import Data_Processor 
@@ -11,7 +12,7 @@ import train
 from Developer_controller import Developer_controller
 
 
-def Moduletrain(save_path,log_path,env):
+def Moduletrain(save_path,log_path,env,times = 2000000):
     model = RecurrentPPO(
     "MultiInputLstmPolicy",
     env,
@@ -27,7 +28,7 @@ def Moduletrain(save_path,log_path,env):
     verbose=1,
     )
     
-    train.train(model,env,3000000,save_path,log_path,100)
+    train.train(model,env,times,save_path,log_path,100)
 
 
 
@@ -137,13 +138,21 @@ def Coin_train():
 def Key_train():
     Key_save_path = 'trained_modules/KeyModule/Key_best03'
     Key_log_path = 'logs/Key03_Log'
-    pass
+    Ctrl_env = make_vec_env("KeyModuleMagicTowerEnv_6x6",monitor_dir=Key_log_path)
+    Moduletrain(Key_save_path,Key_log_path,Ctrl_env,1000000)
+    
 
 def Ctrl_train():
     Ctrl_save_path= 'trained_modules/Controller/Ctrl_best02'
     Ctrl_log_path = 'logs/Controller02_Log'
     Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
-    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
+
+def old_Ctrl_train():
+    Ctrl_save_path= 'trained_modules/OldController/Ctrl_best02'
+    Ctrl_log_path = 'logs/OldController_Log'
+    Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
 
 def def_DP():
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
@@ -195,10 +204,8 @@ def get_score(dp):
 def main():
 
     
-    Ctrl_train()
-    
-
-    
+    #Ctrl_train()
+    Key_train()
 
 
 main()
