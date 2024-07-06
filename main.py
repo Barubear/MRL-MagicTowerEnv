@@ -151,8 +151,12 @@ def Ctrl_train():
 def old_Ctrl_train():
     Ctrl_save_path= 'trained_modules/OldController/Ctrl_best02'
     Ctrl_log_path = 'logs/OldController_Log'
-    Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
+    Ctrl_env = make_vec_env("OldModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
     Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
+    #state_value:
+    #max:23.179083
+    #mean:-8.629469
+    #min:-165.52904
 
 def def_DP():
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
