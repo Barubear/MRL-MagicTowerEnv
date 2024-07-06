@@ -163,53 +163,68 @@ def def_DP():
     model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02')
     #img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
     img_save_path_round2 = 'D:/大学院/2024春/実装/実験記録/img02'
-    dp = Data_Processor(env,model,'logs/test_log_round2/','logs/test_Log/org_test_Log',img_save_path_round2)
+    dp = Data_Processor(env,model,'logs/test_log_round2/','logs/test_Log_round2/org_test_Log',img_save_path_round2)
 
     return dp
 
-def get_score(dp):
+def get_score(dp:Data_Processor):
     dp.developer_controller_test('MoreBattle',
                                  more_battle_developer_controller_dic,
                                  list(more_battle_developer_controller_dic.keys()),
-                                 #only_draw = True,
-                                 save_only= True
+                                 
+                                 save_only= True,
+                                 
                                  )
     
     
     dp.developer_controller_test('MoreCoin',
                                  coin_developer_controller_dic,
                                  list(coin_developer_controller_dic.keys()),
-                                 only_draw = True,
-                                 save_only= True
+                                 
+                                 save_only= True,
                                  )
+                                 
     
     
     dp.developer_controller_test('MoreKey',key_developer_controller_dic,
                                 list(key_developer_controller_dic.keys()),
-                                #only_draw = True,
-                                save_only= True
+                                
+                                save_only= True,
+                                
                                 )
     
     
-    #dp.print_state_vale()
+    
     #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
     #dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
     #dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
 
-    #
-    #print(dp.get_one_score('logs/test_Log/org_test_Log/test_log.csv'))
-    #dp.get_pearsonr('MoreBattle','enemy score','coin score')
     
-
+    #print(dp.get_one_score('logs/test_Log_round2/org_test_Log/test_log.csv'))
     
-    #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
     
 
 def main():
 
     
     #Ctrl_train()
-    Key_train()
-
+    #Key_train()
+    #env = make_vec_env("ModuleMagicTowerEnv_6x6")
+    #model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02.zip')
+    dp = def_DP()
+    dp.Moudel_test(1000,100,'logs/test_log_round2/org_test_Log',track_only=False)
+    dp.darw_track_map('logs/test_log_round2/org_test_Log/trac_log.csv','org track map','D:/大学院/2024春/実装/実験記録/img02/org')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","max")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","mean")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","min")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","max")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","mean")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","min")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","max")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","mean")
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","min")
+    
+    get_score(dp)
+   # dp.print_state_vale('logs/test_log_round2/org_test_Log/state_value_log.csv')
 
 main()

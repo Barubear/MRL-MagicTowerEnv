@@ -1,0 +1,7 @@
+
+class old_module:
+    def __init__(self) -> None:
+        pass
+        
+    def old_test():
+        pass

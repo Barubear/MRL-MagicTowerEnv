@@ -5,6 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import os
+import Developer_controller
 from scipy.stats import pearsonr
 
 class Data_Processor:
@@ -52,7 +53,7 @@ class Data_Processor:
         state_value = self.model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
         return state_value.to('cpu')
 
-    def Moudel_test(self,test_times,max_step,folder,developer_controller =None):
+    def Moudel_test(self,test_times:int,max_step:int,folder:str,developer_controller:Developer_controller = None ,track_only= False):
         state_value_list =[]
         log_list =[]
         track_list =[]
@@ -61,16 +62,17 @@ class Data_Processor:
             obs = self.env.reset()
             step =1
             info = None
-
+            n = 0
             while True:
-
+                
                 if info == None:
                     state_value_list.append([(1,5), obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
                     track_list.append((1,5))
                 else:
                     state_value_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
                     track_list.append(info[0]["pos"])
-           
+
+                
 
                 if developer_controller != None:
                     obs = developer_controller.add_weight(obs)
@@ -78,18 +80,27 @@ class Data_Processor:
                 action, _states = self.model.predict(obs)
                 obs, rewards, dones, info  = self.env.step(action)
                 step +=1
+
+                if track_only and step>20:
+                    print(i)
+                    break
+
                 if dones or step == max_step:
                     print(i)
                     log_list.append([step, info[0]["hp/enemy"][0], info[0]["hp/enemy"][1], info[0]["coin"]])
 
                     break
-            
-    
+                
+                
+                
+                
+
             log_path =  folder +'/test_log.csv'
             state_value_path =  folder +'/state_value_log.csv'
             track_path =  folder +'/trac_log.csv'
+        if not  track_only:
+            self.write_log(log_path, log_list, ['step','hp', 'enemy', 'coin'] )
 
-        self.write_log(log_path, log_list, ['step','hp', 'enemy', 'coin'] )
         self.write_log(state_value_path, state_value_list, ['pos','battle', 'coin', 'key'])
         self.write_log(track_path, track_list)
     
@@ -226,7 +237,7 @@ class Data_Processor:
         else:
             plt.close()
 
-    def darw_state_value_map(path,modular,data_type,title= None):
+    def darw_state_value_map(self,path:str,modular:str,data_type:str,title:str= None):
 
 
         pos_dic = {}
@@ -341,6 +352,7 @@ class Data_Processor:
                 pos_x,pos_y = int(row[0]),int(row[1])
                 track_map[pos_x][pos_y] +=1
                 
+                
 
         color_list = []
         
@@ -393,7 +405,7 @@ class Data_Processor:
         else:
             plt.close()
 
-    def developer_controller_test(self,moduar_name,dc_dic,dc_index_list,only_draw = False,save_only = False):
+    def developer_controller_test(self,moduar_name,dc_dic,dc_index_list,only_draw = False,save_only = False,track_only= False):
         
         directory_path_list =[]
         img_directory_path_list =[]
@@ -404,11 +416,12 @@ class Data_Processor:
             directory_path_list.append(directory_path)
             os.makedirs(directory_path, exist_ok=True)
             if only_draw == False:
-                self.Moudel_test(1000,100,folder =directory_path ,developer_controller = dc_dic[dc_keys])
+                self.Moudel_test(1000,100,folder =directory_path ,developer_controller = dc_dic[dc_keys],track_only=track_only)
 
             img_directory_path = self.img_save_path + '/'+moduar_name+'_test'+ dc_keys + '_Log'
             img_directory_path_list.append(img_directory_path)
             os.makedirs(img_directory_path, exist_ok=True)
+            
             
         
         n = 0
