@@ -345,6 +345,40 @@ class Data_Processor:
         plt.gca().invert_yaxis()  # 将 y 轴反转以使 (0,0) 在左上角
         plt.show()
 
+
+
+    def darw_state_value_map_with_action(self,file_path:str,save_path:str,exNum:str):
+
+
+        action_dic = [0,0,0]
+        notmax_dic =[[],[],[]]
+        wall_pos = [(1,1),(4,1),(1,3),(3,3),(5,3),(1,4),(3,4),(5,4)]
+        notmax_count = 0
+        with open(file_path,'r') as f:
+            reader = csv.reader(f)
+            next(reader)
+            for row in reader:
+                action = row[4]
+
+                max_index = -1
+
+                if row[1] >row[2]:
+                    max_index = 1
+                    if row[1] < row[3]:
+                        max_index = 3
+                else:
+                    max_index = 2
+                    if row[2] < row[3]:
+                        max_index = 3
+                
+                if  action+1 == max_index :
+                    action_dic[action] +=1
+                    notmax_dic[action].append(row[max_index])
+                else:
+                    notmax_count+=1
+        
+        pass
+                
     def darw_track_map(self,path,title=None,img_save_path = None ,save_only = False):
 
         track_map = [[0 for _ in range(6)] for _ in range(6)]

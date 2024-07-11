@@ -219,7 +219,7 @@ def main():
     #env = make_vec_env("ModuleMagicTowerEnv_6x6")
     #model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02.zip')
     dp = def_DP()
-    #dp.Moudel_test(1000,100,'logs/test_log/org_test_Log')
+    dp.Moudel_test(1000,100,'logs/test_log/org_test_Log')
     #dp.darw_track_map('logs/test_log_round2/org_test_Log/trac_log.csv','org track map','D:/大学院/2024春/実装/実験記録/img02/org')
     """
     dp.daw_graph('enemy','logs/test_Log/org_test_Log/test_log.csv' ,title=' org enemy count',xlable='enemy',img_save_path = 'D:/大学院/2024春/実装/実験記録/img/org',save_only =True)
@@ -238,7 +238,7 @@ def main():
     dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","min",'org key min')
     """
     #get_score(dp)
-    dp.daw_graph('step','logs/test_log/org_test_Log/test_log.csv','logs/test_Log/MoreBattle_test25_Log/test_log.csv',title='MoreBattle_test25 step count',lable1 = 'org',lable2='moreBattle25',xlable='step')
+    #dp.daw_graph('step','logs/test_log/org_test_Log/test_log.csv','logs/test_Log/MoreBattle_test25_Log/test_log.csv',title='MoreBattle_test25 step count',lable1 = 'org',lable2='moreBattle25',xlable='step')
    # dp.print_state_vale('logs/test_log_round2/org_test_Log/state_value_log.csv')
 
 main()
