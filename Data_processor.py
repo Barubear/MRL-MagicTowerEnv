@@ -53,7 +53,7 @@ class Data_Processor:
         state_value = self.model.policy.predict_values(obs_tensor_dict,_states_tensor ,episode_starts)
         return state_value.to('cpu')
 
-    def Moudel_test(self,test_times:int,max_step:int,folder:str,developer_controller:Developer_controller = None ,track_only= False):
+    def Moudel_test(self,test_times:int,max_step:int,folder:str,developer_controller:Developer_controller = None ):
         state_value_list =[]
         log_list =[]
         track_list =[]
@@ -63,13 +63,13 @@ class Data_Processor:
             step =1
             info = None
             n = 0
+            action = None
             while True:
                 
-                if info == None:
-                    state_value_list.append([(1,5), obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
-                    track_list.append((1,5))
-                else:
-                    state_value_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]])
+                if info != None and action!=None:
+                    
+                
+                    state_value_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]],action)
                     track_list.append(info[0]["pos"])
 
                 
@@ -81,9 +81,7 @@ class Data_Processor:
                 obs, rewards, dones, info  = self.env.step(action)
                 step +=1
 
-                if track_only and step>20:
-                    print(i)
-                    break
+                
 
                 if dones or step == max_step:
                     print(i)
@@ -95,13 +93,14 @@ class Data_Processor:
                 
                 
 
-            log_path =  folder +'/test_log.csv'
-            state_value_path =  folder +'/state_value_log.csv'
-            track_path =  folder +'/trac_log.csv'
-        if not  track_only:
-            self.write_log(log_path, log_list, ['step','hp', 'enemy', 'coin'] )
+        log_path =  folder +'/test_log.csv'
+        state_value_path =  folder +'/state_value_log.csv'
+        track_path =  folder +'/trac_log.csv'
+        
+       
+        self.write_log(log_path, log_list, ['step','hp', 'enemy', 'coin'] )
 
-        self.write_log(state_value_path, state_value_list, ['pos','battle', 'coin', 'key'])
+        self.write_log(state_value_path, state_value_list, ['pos','battle', 'coin', 'key','action'])
         self.write_log(track_path, track_list)
     
     def write_log(self,path,data,tile_list=None,write_type ='w'):
@@ -172,7 +171,9 @@ class Data_Processor:
         log_dic ={}
         log_dic2 ={}
         for n in log_list:
-        
+            if datatype == 'step' and n >36:
+                continue
+
             if n in log_dic:
                 log_dic[n] +=1
             else:
@@ -180,7 +181,9 @@ class Data_Processor:
 
 
         for n in log_list2:
-        
+            
+            if datatype == 'step' and n >36:
+                continue
             if n in log_dic2:
                 log_dic2[n] +=1
             else:
@@ -296,7 +299,7 @@ class Data_Processor:
                 state_value_dic[tuple_pos[0]][tuple_pos[1]] = value
             else:
                 return ("no data tpye named "+ modular)
-            print(pos,value)
+            
 
         state_value_list = np.array(state_value_list)
 
@@ -313,15 +316,15 @@ class Data_Processor:
     # 绘制网格
         for i in range(6):
             for j in range(6):
-                color= 'white'
+
             
                 
-            if (i,j) in wall_pos:
-                color = 'black'
-            else:
-                color = cmap((state_value_dic[i][j] - vmin) / (vmax - vmin))
-            rect = plt.Rectangle((i, j), 1, 1, facecolor=color)
-            ax.add_patch(rect)
+                if (i,j) in wall_pos:
+                    color = 'black'
+                else:
+                    color = cmap((state_value_dic[i][j] - vmin) / (vmax - vmin))
+                rect = plt.Rectangle((i, j), 1, 1, facecolor=color)
+                ax.add_patch(rect)
 
             
         # 设置坐标轴
@@ -372,10 +375,6 @@ class Data_Processor:
         # 绘制网格
         for i in range(6):
             for j in range(6):
-                color= 'white'
-                
-                    
-                
                 color = cmap((track_map[i][j] - vmin) / (vmax - vmin))
                 rect = plt.Rectangle((i, j), 1, 1, facecolor=color)
                 ax.add_patch(rect)
@@ -405,7 +404,7 @@ class Data_Processor:
         else:
             plt.close()
 
-    def developer_controller_test(self,moduar_name,dc_dic,dc_index_list,only_draw = False,save_only = False,track_only= False):
+    def developer_controller_test(self,moduar_name,dc_dic,dc_index_list,only_draw = False,save_only = False):
         
         directory_path_list =[]
         img_directory_path_list =[]
@@ -416,7 +415,7 @@ class Data_Processor:
             directory_path_list.append(directory_path)
             os.makedirs(directory_path, exist_ok=True)
             if only_draw == False:
-                self.Moudel_test(1000,100,folder =directory_path ,developer_controller = dc_dic[dc_keys],track_only=track_only)
+                self.Moudel_test(1000,100,folder =directory_path ,developer_controller = dc_dic[dc_keys])
 
             img_directory_path = self.img_save_path + '/'+moduar_name+'_test'+ dc_keys + '_Log'
             img_directory_path_list.append(img_directory_path)

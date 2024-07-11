@@ -91,6 +91,7 @@ coin_developer_controller_dic ={
     "13" : Developer_controller([0,50, 0]),
 
     "14" : Developer_controller([0,-50, 0]),
+    "15" : Developer_controller([-15,60, 0]),
 
 }
 
@@ -122,7 +123,12 @@ key_developer_controller_dic ={
 
     "17" : Developer_controller([0,0, -60]),
     "18" : Developer_controller([0,0, -40]),
-    
+
+    "19" : Developer_controller([-15,-30, 5]),
+    "20" : Developer_controller([15,-30, 5]),
+    "21" : Developer_controller([15,-30, 1]),
+    "22" : Developer_controller([-15,-60, 0]),
+    "23" : Developer_controller([5,0, -50]),
 }
 
 
@@ -157,13 +163,14 @@ def old_Ctrl_train():
 def def_DP():
     env = make_vec_env("ModuleMagicTowerEnv_6x6")
     model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02')
-    #img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
+    img_save_path = 'D:/大学院/2024春/実装/実験記録/img'
     img_save_path_round2 = 'D:/大学院/2024春/実装/実験記録/img02'
-    dp = Data_Processor(env,model,'logs/test_log_round2/','logs/test_Log_round2/org_test_Log',img_save_path_round2)
+    dp = Data_Processor(env,model,'logs/test_log/','logs/test_Log/org_test_Log',img_save_path)
 
     return dp
 
 def get_score(dp:Data_Processor):
+    """
     dp.developer_controller_test('MoreBattle',
                                  more_battle_developer_controller_dic,
                                  list(more_battle_developer_controller_dic.keys()),
@@ -175,15 +182,15 @@ def get_score(dp:Data_Processor):
     
     dp.developer_controller_test('MoreCoin',
                                  coin_developer_controller_dic,
-                                 list(coin_developer_controller_dic.keys()),
+                                 ["15" ],
                                  
                                  save_only= True,
                                  )
-                                 
+               """                  
     
     
     dp.developer_controller_test('MoreKey',key_developer_controller_dic,
-                                list(key_developer_controller_dic.keys()),
+                                ["23"],
                                 
                                 save_only= True,
                                 
@@ -193,7 +200,7 @@ def get_score(dp:Data_Processor):
     
     #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
     #dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
-    #dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
+    dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
 
     
     #print(dp.get_one_score('logs/test_Log_round2/org_test_Log/test_log.csv'))
@@ -208,19 +215,26 @@ def main():
     #env = make_vec_env("ModuleMagicTowerEnv_6x6")
     #model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02.zip')
     dp = def_DP()
-    dp.Moudel_test(1000,100,'logs/test_log_round2/org_test_Log',track_only=False)
-    dp.darw_track_map('logs/test_log_round2/org_test_Log/trac_log.csv','org track map','D:/大学院/2024春/実装/実験記録/img02/org')
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","max")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","mean")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","min")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","max")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","mean")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","min")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","max")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","mean")
-    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv', "key","min")
+    #dp.Moudel_test(1000,100,'logs/test_log/org_test_Log')
+    #dp.darw_track_map('logs/test_log_round2/org_test_Log/trac_log.csv','org track map','D:/大学院/2024春/実装/実験記録/img02/org')
+    """
+    dp.daw_graph('enemy','logs/test_Log/org_test_Log/test_log.csv' ,title=' org enemy count',xlable='enemy',img_save_path = 'D:/大学院/2024春/実装/実験記録/img/org',save_only =True)
+    dp.daw_graph('coin','logs/test_Log/org_test_Log/test_log.csv',title= 'org coin count',xlable='coin',img_save_path = 'D:/大学院/2024春/実装/実験記録/img/org',save_only =True)
+    dp.daw_graph('step','logs/test_Log/org_test_Log/test_log.csv', title=' org step count',xlable='step',img_save_path = 'D:/大学院/2024春/実装/実験記録/img/org',save_only =True)
+    dp.daw_graph('hp','logs/test_Log/org_test_Log/test_log.csv', title=' org hp count',xlable='step',img_save_path = 'D:/大学院/2024春/実装/実験記録/img/org',save_only =True)
     
-    get_score(dp)
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","max",'org battle max')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","mean",'org battle mean')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"battle","min",'org battle min')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","max",'org coin max')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","mean",'org coin mean')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"coin","min",'org coin min')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","max",'org key max')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","mean",'org key mean')
+    dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","min",'org key min')
+    """
+    #get_score(dp)
+    dp.daw_graph('step','logs/test_log/org_test_Log/test_log.csv','logs/test_Log/MoreBattle_test25_Log/test_log.csv',title='MoreBattle_test25 step count',lable1 = 'org',lable2='moreBattle25',xlable='step')
    # dp.print_state_vale('logs/test_log_round2/org_test_Log/state_value_log.csv')
 
 main()
