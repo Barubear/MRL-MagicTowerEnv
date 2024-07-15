@@ -2,8 +2,9 @@
 import torch
 import numpy as np
 import csv
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+
 import os
 import Developer_controller
 from scipy.stats import pearsonr
@@ -69,7 +70,7 @@ class Data_Processor:
                 if info != None and action!=None:
                     
                 
-                    state_value_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1]],action)
+                    state_value_list.append([info[0]["pos"], obs['module_list'][0][0][1], obs['module_list'][0][1][1], obs['module_list'][0][2][1],action])
                     track_list.append(info[0]["pos"])
 
                 
@@ -347,38 +348,58 @@ class Data_Processor:
 
 
 
-    def darw_state_value_map_with_action(self,file_path:str,save_path:str,exNum:str):
+    def get_correct_action_rate(self,file_path:str,modular:str):
 
-
-        action_dic = [0,0,0]
-        notmax_dic =[[],[],[]]
-        wall_pos = [(1,1),(4,1),(1,3),(3,3),(5,3),(1,4),(3,4),(5,4)]
-        notmax_count = 0
+        modular_dic = {'MoreBattle':'[0]',
+                       'MoreCoin':'[1]',
+                       'MoreKey':'[2]',}
+        
+        correct_action = modular_dic[modular]
+        correct_num = 0
+        step_times =0
         with open(file_path,'r') as f:
             reader = csv.reader(f)
             next(reader)
             for row in reader:
+                step_times +=1
                 action = row[4]
-
-                max_index = -1
-
-                if row[1] >row[2]:
-                    max_index = 1
-                    if row[1] < row[3]:
-                        max_index = 3
-                else:
-                    max_index = 2
-                    if row[2] < row[3]:
-                        max_index = 3
                 
-                if  action+1 == max_index :
-                    action_dic[action] +=1
-                    notmax_dic[action].append(row[max_index])
-                else:
-                    notmax_count+=1
+                if action == correct_action:
+                    correct_num +=1
+                
+        return correct_num / step_times
         
-        pass
+    def get_dp_correct_action_rate(self,moduar_name,dc_dic,dc_index_list):
+        correct_action_rate_list =[]
+        
+        i= 0
+        for dc_keys in dc_index_list:
+            
+            log_path = self.log_save_path+moduar_name+'_test'+ dc_keys + '_Log'+ '/state_value_log.csv'
+            correct_action_rate = self.get_correct_action_rate(log_path,moduar_name)
+            dc = str(dc_dic[dc_keys].weights )
+
+            
+            if 'Battle' in moduar_name:
+                num= 'B'+dc_keys
                 
+            elif 'Coin'in moduar_name:
+                num= 'C'+dc_keys
+                
+            elif 'Key' in moduar_name:
+                num= 'K'+dc_keys
+               
+            correct_action_rate_list.append([num,correct_action_rate,dc])
+
+        title = ['Experiment No.','correct action rate','dc']
+        
+        file_path = 'actionLog/' + moduar_name+'/test_action_log.csv'
+        if not os.path.exists(file_path):
+            sorted_list = sorted(correct_action_rate_list, key=lambda x: x[1], reverse=True)
+            self.write_log(file_path,sorted_list,title ,write_type='w')
+        else:
+            self.write_log(file_path,correct_action_rate_list,write_type='a')
+
     def darw_track_map(self,path,title=None,img_save_path = None ,save_only = False):
 
         track_map = [[0 for _ in range(6)] for _ in range(6)]
@@ -450,25 +471,26 @@ class Data_Processor:
             os.makedirs(directory_path, exist_ok=True)
             if only_draw == False:
                 self.Moudel_test(1000,100,folder =directory_path ,developer_controller = dc_dic[dc_keys])
-
-            img_directory_path = self.img_save_path + '/'+moduar_name+'_test'+ dc_keys + '_Log'
-            img_directory_path_list.append(img_directory_path)
-            os.makedirs(img_directory_path, exist_ok=True)
+            if self.img_save_path != None:
+                img_directory_path = self.img_save_path + '/'+moduar_name+'_test'+ dc_keys + '_Log'
+                img_directory_path_list.append(img_directory_path)
+                os.makedirs(img_directory_path, exist_ok=True)
             
             
         
         n = 0
-        for log in directory_path_list:
-            log_data_path = log + '/test_log.csv'
-            print(log_data_path)
-            self.daw_graph('enemy','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' enemy count'+dc_index_list[n],xlable='enemy',img_save_path = img_directory_path_list[n],save_only =save_only)
-            self.daw_graph('coin','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' coin count'+dc_index_list[n],xlable='coin',img_save_path = img_directory_path_list[n],save_only =save_only)
-            self.daw_graph('step','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' step count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
-            self.daw_graph('hp','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' hp count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
-            track_data_path = log+'/trac_log.csv'
-            self.darw_track_map(track_data_path,moduar_name +'track map'+dc_index_list[n],img_save_path = img_directory_path_list[n],save_only =save_only)
-            
-            n +=1 
+        if self.img_save_path != None:
+            for log in directory_path_list:
+                log_data_path = log + '/test_log.csv'
+                print(log_data_path)
+                self.daw_graph('enemy','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' enemy count'+dc_index_list[n],xlable='enemy',img_save_path = img_directory_path_list[n],save_only =save_only)
+                self.daw_graph('coin','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' coin count'+dc_index_list[n],xlable='coin',img_save_path = img_directory_path_list[n],save_only =save_only)
+                self.daw_graph('step','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' step count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
+                self.daw_graph('hp','logs/test_Log/org_test_Log/test_log.csv',log_data_path,lable2=moduar_name, title=moduar_name +' hp count'+dc_index_list[n],xlable='step',img_save_path = img_directory_path_list[n],save_only =save_only)
+                track_data_path = log+'/trac_log.csv'
+                self.darw_track_map(track_data_path,moduar_name +'track map'+dc_index_list[n],img_save_path = img_directory_path_list[n],save_only =save_only)
+                
+                n +=1 
 
     def read_data(self,path,datatype,max_value = 10**10,min_value =-1,list_data_type =int):
         log_list = []
