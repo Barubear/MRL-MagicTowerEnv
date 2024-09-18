@@ -149,10 +149,10 @@ def Key_train():
     
 
 def Ctrl_train():
-    Ctrl_save_path= 'trained_modules/Controller/Ctrl_best02'
-    Ctrl_log_path = 'logs/Controller02_Log'
+    Ctrl_save_path= 'trained_modules/Controller/Ctrl_best03'
+    Ctrl_log_path = 'logs/Controller03_Log'
     Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
-    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,5000000)
 
 def old_Ctrl_train():
     Ctrl_save_path= 'trained_modules/OldController/Ctrl_best02'
@@ -201,15 +201,15 @@ def get_score(dp:Data_Processor):
                                 )
     """
     
-    dp.get_dp_correct_action_rate('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
-    dp.get_dp_correct_action_rate('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
-    dp.get_dp_correct_action_rate('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
-    #dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
-    #dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
-    #dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
+    #dp.get_dp_correct_action_rate('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
+    #dp.get_dp_correct_action_rate('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
+    #dp.get_dp_correct_action_rate('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
+    dp.get_score('MoreBattle',more_battle_developer_controller_dic,list(more_battle_developer_controller_dic.keys()))
+    dp.get_score('MoreCoin',coin_developer_controller_dic,list(coin_developer_controller_dic.keys()))
+    dp.get_score('MoreKey',key_developer_controller_dic,list(key_developer_controller_dic.keys()))
 
     
-    #print(dp.get_one_score('logs/test_Log_round2/org_test_Log/test_log.csv'))
+    print(dp.get_one_score('logs/test_Log/org_test_Log/test_log.csv'))
     
     
 
@@ -220,7 +220,7 @@ def main():
     #Key_train()
     #env = make_vec_env("ModuleMagicTowerEnv_6x6")
     #model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02.zip')
-    dp = def_DP()
+    #dp = def_DP()
     #dp.Moudel_test(1000,100,'logs/test_log/org_test_Log')
     #dp.darw_track_map('logs/test_log_round2/org_test_Log/trac_log.csv','org track map','D:/大学院/2024春/実装/実験記録/img02/org')
     """
@@ -239,7 +239,7 @@ def main():
     dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","mean",'org key mean')
     dp.darw_state_value_map('logs/test_log_round2/org_test_Log/state_value_log.csv',"key","min",'org key min')
     """
-    get_score(dp)
+    #get_score(dp)
     #dp.daw_graph('step','logs/test_log/org_test_Log/test_log.csv','logs/test_Log/MoreBattle_test25_Log/test_log.csv',title='MoreBattle_test25 step count',lable1 = 'org',lable2='moreBattle25',xlable='step')
    # dp.print_state_vale('logs/test_log_round2/org_test_Log/state_value_log.csv')
 

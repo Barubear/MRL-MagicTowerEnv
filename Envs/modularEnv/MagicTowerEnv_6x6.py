@@ -36,13 +36,21 @@ class MagicTowerEnv_6x6(gym.Env):
         self.modular_predict_list =[(0,0),(0,0),(0,0)]
         self.modular_action_list =[0,0,0]
         
-        
+        self.dc_list = [[0,0,0]
+                        [10,0,0],[5,0,0],[-5,0,0],[-10,0,0],
+                        [0,10,0],[0,5,0],[0,-5,0],[0,-10,0],
+                        [0,0,10],[0,0,5],[0,0,-5],[0,0,-10],
+
+                        ]
+        self.dc_index = 0
+        self.curr_dc = self.dc_list[self.dc_index]
 
         self.modualr_list =[self.battble_modular, self.coin_modular, self.key_modular]
         self.observation_space = spaces.Dict(
             {
                 "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
                 "agent": spaces.Box(0, size - 1, shape=(2,), dtype=int),
+                "dc":spaces.Box(-10, 10, shape=(3,), dtype=int),
             }
         )
         self.action_space = spaces.Discrete(3)
@@ -54,6 +62,7 @@ class MagicTowerEnv_6x6(gym.Env):
 
                 "map":np.array(self.curr_map, dtype=int),
                 "agent": np.array(self.agent_pos, dtype=float),
+                "dc":np.array(self.curr_dc, dtype=float),
                 
 
         }
@@ -78,6 +87,8 @@ class MagicTowerEnv_6x6(gym.Env):
         self.curr_HP = self.max_HP 
         self.have_key = False
         self.curr_coin_num = self.max_coin_num
+        self.dc_index += 1
+        self.curr_dc = self.dc_list[self.dc_index%13]
 
         for m in self.modualr_list:
             m.reset()
@@ -93,6 +104,9 @@ class MagicTowerEnv_6x6(gym.Env):
         terminated = False
         truncated =False
 
+        battate_rewad = self.curr_dc[0]
+        coin_reward = self.curr_dc[1]
+        key_reward = self.curr_dc[3]
 
         if(action == 0):#up
             next_y-=1
@@ -117,7 +131,7 @@ class MagicTowerEnv_6x6(gym.Env):
             #enemy
             elif(self.curr_map[next_x,next_y] == 2):
                 if random.random() < 0.5:  # 50% chance of winning
-                    reward +=15
+                    reward +=15 + battate_rewad
                 else:  #
                     reward -= 5
                     self.curr_HP -= 1
@@ -133,14 +147,14 @@ class MagicTowerEnv_6x6(gym.Env):
             #exit
             elif(self.curr_map[next_x,next_y] == 3):  
                 if self.have_key == True:
-                      reward+=10
+                      reward+=10 +key_reward
                       terminated = True
                       self._update_agent_position(next_x,next_y)
                 else:
                       reward-=10
             #coin
             elif(self.curr_map[next_x,next_y] == 4):  
-                reward +=10
+                reward +=10 + coin_reward
                 self.curr_coin_num -= 1    
                     
                 self._update_agent_position(next_x,next_y)
@@ -151,7 +165,7 @@ class MagicTowerEnv_6x6(gym.Env):
             #key
             elif(self.curr_map[next_x,next_y] == 5):
                 self.have_key = True
-                reward +=5  
+                reward +=5  +key_reward
                 self._update_agent_position(next_x,next_y) 
                 
 

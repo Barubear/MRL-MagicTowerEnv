@@ -18,7 +18,7 @@ class Data_Processor:
         self.img_save_path =img_save_path
         self.infinity_large_int = 10**10
         
-        pass
+        
             
     def print_state_vale(self,path =None):
         if path == None:
