@@ -50,7 +50,7 @@ class MagicTowerEnv_6x6(gym.Env):
             {
                 "map":spaces.Box(-10, 10, shape=(size,size), dtype=int),
                 "agent": spaces.Box(0, size - 1, shape=(2,), dtype=int),
-                "dc":spaces.Box(-10, 10, shape=(3,), dtype=int),
+                #"dc":spaces.Box(-10, 10, shape=(3,), dtype=int),
             }
         )
         self.action_space = spaces.Discrete(3)
@@ -62,7 +62,7 @@ class MagicTowerEnv_6x6(gym.Env):
 
                 "map":np.array(self.curr_map, dtype=int),
                 "agent": np.array(self.agent_pos, dtype=float),
-                "dc":np.array(self.curr_dc, dtype=float),
+                #"dc":np.array(self.curr_dc, dtype=float),
                 
 
         }

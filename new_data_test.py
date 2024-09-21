@@ -178,49 +178,57 @@ def get_score(file_path):
 
 
 def main():
+    
     score_log_list =[]
-    module_path= 'trained_modules/Controller/Ctrl_best03'
+    module_path= 'trained_modules/Controller/new_Ctrl_best01'
     Ctrl_log_path = 'logs/new_Controller_Log'
     Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6-v_test")
     model = RecurrentPPO.load(module_path)
     model.set_env(Ctrl_env)
 
-    dc  = [10,0,0]
+    dc  = [0,0,0]
     print(str(dc))
-    file_path = Moudel_test(Ctrl_env,model,1000,105,Ctrl_log_path,dc)
+    file_path  =  Ctrl_log_path+ '/'+ str(dc) + 'test_log.csv'
     score_list = get_score(file_path)
     score_log_list.append(score_list)
 
-    dc  = [0,10,0]
-    print(str(dc))
-    file_path = Moudel_test(Ctrl_env,model,1000,105,Ctrl_log_path,dc)
-    score_list = get_score(file_path)
-    score_log_list.append(score_list)
 
-    dc  = [0,0,10]
-    print(str(dc))
-    file_path = Moudel_test(Ctrl_env,model,1000,105,Ctrl_log_path,dc)
-    score_list = get_score(file_path)
-    score_log_list.append(score_list)
-
-    """"
+    
     for i in range(3):
             dc = [0,0,0]
-            for j in range(20):
+            for j in range(21):
                 dc_value = (j -10)
                 if dc_value == 0:
                     continue
                 dc[i] = dc_value
                 print(str(dc))
-                file_path = Moudel_test(Ctrl_env,model,1000,105,Ctrl_log_path,dc)
+                file_path = Ctrl_log_path+ '/'+ str(dc) + 'test_log.csv'
                 score_list = get_score(file_path)
+                score_list.append(str(dc))
                 score_log_list.append(score_list)
-    
-    title = ['dc.','enemy score','coin score','step_score','key score','clear_rate']
-    save_path = Ctrl_log_path+'/total_data,csv'
+
+    title = ['enemy score','coin score','step_score','key score','clear_rate','dc']
+    score_log_list.sort(key=lambda x: x[0], reverse=True)
+    save_path = 'newScore/enemy_core.csv'
     write_log(save_path,  score_log_list, title )
 
-    """
+    score_log_list.sort(key=lambda x: x[1], reverse=True)
+    save_path = 'newScore/coin_core.csv'
+    write_log(save_path,  score_log_list, title )
+
+    score_log_list.sort(key=lambda x: x[2], reverse=True)
+    save_path = 'newScore/step_core.csv'
+    write_log(save_path,  score_log_list, title )
+
+    score_log_list.sort(key=lambda x: x[3], reverse=True)
+    save_path = 'newScore/key_core.csv'
+    write_log(save_path,  score_log_list, title )
+
+    score_log_list.sort(key=lambda x: x[4], reverse=True)
+    save_path = 'newScore/clear_rate.csv'
+    write_log(save_path,  score_log_list, title )
+
+    
 
 
 main()

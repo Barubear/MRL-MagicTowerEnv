@@ -149,13 +149,13 @@ def Key_train():
     
 
 def Ctrl_train():
-    Ctrl_save_path= 'trained_modules/Controller/Ctrl_best03'
+    Ctrl_save_path= 'trained_modules/Controller/new_Ctrl_best02'
     Ctrl_log_path = 'logs/Controller03_Log'
     Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
     Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
 
 def old_Ctrl_train():
-    Ctrl_save_path= 'trained_modules/OldController/Ctrl_best02'
+    Ctrl_save_path= 'trained_modules/OldController/Ctrl_best0'
     Ctrl_log_path = 'logs/OldController_Log'
     Ctrl_env = make_vec_env("OldModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
     Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
