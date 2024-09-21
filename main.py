@@ -152,7 +152,7 @@ def Ctrl_train():
     Ctrl_save_path= 'trained_modules/Controller/Ctrl_best03'
     Ctrl_log_path = 'logs/Controller03_Log'
     Ctrl_env = make_vec_env("ModuleMagicTowerEnv_6x6",monitor_dir=Ctrl_log_path)
-    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,5000000)
+    Moduletrain(Ctrl_save_path,Ctrl_log_path,Ctrl_env,3000000)
 
 def old_Ctrl_train():
     Ctrl_save_path= 'trained_modules/OldController/Ctrl_best02'
@@ -216,7 +216,7 @@ def get_score(dp:Data_Processor):
 def main():
 
     
-    #Ctrl_train()
+    Ctrl_train()
     #Key_train()
     #env = make_vec_env("ModuleMagicTowerEnv_6x6")
     #model = RecurrentPPO.load('trained_modules/Controller/Ctrl_best02.zip')

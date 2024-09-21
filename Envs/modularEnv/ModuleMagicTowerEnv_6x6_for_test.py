@@ -7,7 +7,7 @@ from sb3_contrib import RecurrentPPO
 import torch
 from modulars import BattleModular,CoinModular,KeyModular
 
-class ModuleMagicTowerEnv_6x6(gym.Env):
+class ModuleMagicTowerEnv_6x6_for_test(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
     
     def __init__(self,render_mode = "human",size = 6):
@@ -112,9 +112,6 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         self.have_key = False
         self.curr_coin_num = self.max_coin_num
 
-        self.dc_index += 1
-        self.curr_dc = self.dc_list[self.dc_index%13]
-
         for m in self.modualr_list:
             m.reset()
 
@@ -207,7 +204,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
 
         observation = self._get_obs()
         info = self._get_info()
-        print(action,self.curr_modular_index,info)
+        
         return observation, reward, terminated, truncated, info
         
 
@@ -225,7 +222,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
 
 
 register(
-    id='ModuleMagicTowerEnv_6x6',
-    entry_point='Envs.modularEnv.ModuleMagicTowerEnv_6x6:ModuleMagicTowerEnv_6x6',
+    id='ModuleMagicTowerEnv_6x6-v_test',
+    entry_point='Envs.modularEnv.ModuleMagicTowerEnv_6x6_for_test:ModuleMagicTowerEnv_6x6_for_test',
     max_episode_steps=300,
 )

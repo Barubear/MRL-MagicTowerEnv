@@ -57,7 +57,7 @@ class SaceBaseCallback(BaseCallback):
             
             return True
         x , y = ts2xy(load_results(self.log_path),'timesteps')
-        mean_reward = sum(y[-100:])/len(y[-100:])
+        mean_reward = sum(y[-1000:])/len(y[-1000:])
         print(self.best_step)
         if mean_reward >self.best:
             self.best = mean_reward
