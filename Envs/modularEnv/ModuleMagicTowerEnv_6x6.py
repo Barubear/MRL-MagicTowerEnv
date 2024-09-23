@@ -96,8 +96,8 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
         return{
             "hp/enemy":(self.curr_HP,self.curr_nemy_num),
             "coin":self.curr_coin_num,
-            "pos":self.agent_pos
-            
+            "pos":self.agent_pos,
+            "dc":np.array(self.curr_dc, dtype=float),
 
 
         }
@@ -157,7 +157,7 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
             #enemy
             elif(self.curr_map[next_x,next_y] == 2):
                 if random.random() < 0.5:  # 50% chance of winning
-                    reward += (15+battate_weigh)
+                    reward += (15+battate_weigh*10)
                 else:  #
                     reward -= 5
                     self.curr_HP -= 1
@@ -173,14 +173,14 @@ class ModuleMagicTowerEnv_6x6(gym.Env):
             #exit
             elif(self.curr_map[next_x,next_y] == 3):  
                 if self.have_key == True:
-                      reward+=(10+ key_weigh)
+                      reward+=(10+ key_weigh*10)
                       terminated = True
                       self._update_agent_position(next_x,next_y)
                 else:
                       reward-=10
             #coin
             elif(self.curr_map[next_x,next_y] == 4):  
-                reward +=(10+coin_weigh)
+                reward +=(10+coin_weigh*10)
                 self.curr_coin_num -= 1    
                     
                 self._update_agent_position(next_x,next_y)
